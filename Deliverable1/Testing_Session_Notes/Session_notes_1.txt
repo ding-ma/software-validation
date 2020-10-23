@@ -1,0 +1,231 @@
+CHARTER
+-----------------------------------------------
+Identify documented and undocumented “rest api todo list manager” capabilities.
+
+
+Build
+-----------------------------------------------
+runTodoManagerRestAPI-1.5.5.jar
+
+
+Area
+-----------------------------------------------
+Typical Scenarios - Main functions and capabilites
+
+
+Environment
+-----------------------------------------------
+Windows 10
+Screen resolution: 1920x1080
+
+
+START
+-----------------------------------------------
+9:36 PM Oct 22, 2020
+
+Other Data
+-----------------------------------------------
+Written text attachement
+Video of session
+
+TESTER
+-----------------------------------------------
+Ding Ma
+ding.ma@mail.mcgill.ca
+
+Petar Basta
+petar.basta@mail.mcgill.ca
+
+TASK BREAKDOWN
+-----------------------------------------------
+
+#DURATION
+45 minutes
+
+
+TEST NOTES
+ALL the tests will be done with XML format for this session
+-----------------------------------------------
+9:35 Booted up application
+GET /todos: got all the prefilled todos 
+
+9:37
+GET /todos/1: returns the todo with that id
+
+GET /todos/55: (id that does not exist), 
+not matching with the swagger
+expected:
+"description": "Could not find a specific todo"
+actual:
+Could not find an instance with todos/55
+
+
+9:39
+HEAD /todos: nothing is happening. HTTP200
+
+9:40
+HEAD /todos/1: existing id. nothing is happning HTTP200
+HEAD /todos/55: nonexisting id. nothing is happening HTTP404
+
+9:41
+PUT /todos/1: empty body.
+error: title field mandatory. HTTP400
+
+PUT /todos/1: {title: "new title"}, update the id1 with the new title.
+PUT /todos/55: {title: "new todo"}
+error HTTP 404:
+Invalid GUID for 55 entity todo
+actual:
+Could not find a specific todo
+
+9:45
+POST /todos/2: no title
+error: null ptr exception
+POST /todos/2: {title: "newtitle"}. update the todo with that title
+
+9:49
+DELETE /todos/2: no body. it deletes the todo as expected
+DELETE /todos/55: with id that does not exist
+actual HTTP404:
+Could not find any instances with todos/55
+
+9:50
+OPTIONS /todos/55: no body, gives HTTP200
+OPTIONS /todos/2: no body, gives HTTP200
+
+9:52
+OPTIONS /todos/1/taskof: no body, give HTTP200
+OPTIONS /todos/1/taskof: {id:1}, gives HTTP200
+
+POST /todos/1/taskof: {id: 1}
+eror HTTP404:
+Could not find thing matching value for id
+
+9:54
+now we are going to make a project with title "JAAF"
+
+GET /todos/3/taskof with {id: 1}
+nothing is given, HTTP200
+
+POST /todos/3/taskof with {id: 1}
+error HTTP404
+Could not find thing matching value for id
+
+POST /todos/3/taskof with {id: 1} IN JSON FORMAT
+error HTTP404
+Could not find thing matching value for id
+
+9:57
+POST /todos/3/taskof with {title: Office work}
+swagger says with the todo ID and project ID. But it is actually the title we need.
+HTTP200
+
+10:00
+now we are going to try with duplicated title
+POST /todos: {title: Office work}, works as expected
+
+Get /todos/3/taskof with {title: Office work}
+project 2 with task id 3
+
+POST /todos/3/taskof with {title: Office work}
+it creates it for both project 
+
+POST /todos/3/taskof with {title: Office BALBLALBA}, try to create a relationship between todo and a non existing project. it creates the projec instead of saying that it does not exist 
+HTTP200
+We have a screenshot of that problem
+
+POST /todos/3/taskof with {title: Office BALBLALBA, completed: true}
+it creates a new project instead of searching that project and updating
+
+PUT gives method not allowed which is what we are expecting
+DELETE also does that
+
+
+POST /todos/3/taskof with {title: Office BALBLALBA, completed: true, id:2}
+error HTTP404:
+Could not find thing matching value for id
+
+10:07
+DELETE /todos/1/tasksof/:id
+error HTTP404
+Could not find any instances with todos/1/tasksof/55
+
+DELETE /todos/1d/tasksof/:id
+HTTP200 and it is infact deleted
+
+1010
+GET /todos/1/categories
+works as expected
+
+POST /todos/1/categories, id=1 in xml body
+fails, we cannot use "".
+
+POST /todos/1/categories, id=1 in json body, it works as expected 
+fails
+Could not find thing matching value for id
+
+POST /todos/1/categories, id="1" in json body, it works as expected 
+it works as expected 
+
+1015
+GET /todos/1/categories
+category 1 is there
+
+DELETE /todos/1/categories/1,
+works as expected
+
+GET /todos/1/categories
+category 1 is gone as expected
+
+POST /todos/1/categories, id=1 in xml body
+fails, we cannot use "".
+
+POST /todos/1/categories, id=1 in json body, it works as expected 
+fails
+Could not find thing matching value for id
+
+POST /todos/1/categories, id="1" in json body, it works as expected 
+it works as expected 
+
+1015
+GET /todos/1/categories
+category 1 is there
+
+DELETE /todos/1/categories/1, with any body. it is ignored
+works as expected
+ 
+1017
+GET /projects
+returns all the projects as expected
+
+GET /projects with some body
+returns all the projects as expected
+
+HEAD /projects
+returns all the headers of the projects as expted
+
+HEAD /projects with some body
+returns all the headers of the projects as expted
+
+
+1020
+GET /shutdown
+works as expected 
+
+
+----------------- session end ----------------------------------------
+
+session findings:
+(BUG) XML file does not work well with the application. more testing is needed 
+
+
+Concerns:
+- 
+
+Testing ideas: 
+- trying out "" and without "" for tests
+- test out the null keyword
+- A PDF with the images from the tests is also available
+
+
+
