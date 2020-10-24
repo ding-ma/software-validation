@@ -1,0 +1,4 @@
+☐ Ensure unit tests fail if service is not running.
+☐ Include at least one test to see what happens if a JSON payload is malformed.
+☐ Include at least one test to see what happens if an XML payload is malformed.
+☐ For each API include tests of invalid operations, for example, attempting to delete an object which has already been deleted.
