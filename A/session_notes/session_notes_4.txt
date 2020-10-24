@@ -1,0 +1,221 @@
+CHARTER
+-----------------------------------------------
+Exercise each capability identified with data typical to the intended use of the application.
+
+
+BUILD
+-----------------------------------------------
+runTodoManagerRestAPI-1.5.5.jar release version v3
+
+
+AREA
+-----------------------------------------------
+Typical Scenarios - Main functions and capabilites
+
+
+FILES CREATED AS PART OF EXPLORATORY TESTING
+-----------------------------------------------
+TodoManagerRESTAPI_charter4.postman_collection (all requests used during testing)
+
+
+ENVIRONMENT
+-----------------------------------------------
+Windows 10
+Screen resolution: 3440x1440
+
+
+PREPARATION
+-----------------------------------------------
+Run the application and read documentation about REST API http://localhost:4567/docs
+
+
+START
+-----------------------------------------------
+1:19 PM 10/23/2020
+
+
+TESTER
+-----------------------------------------------
+Michael Li (260869379)
+er.li@mail.mcgill.ca
+
+William Zhang (260865382)
+william.zhang2@mail.mcgill.ca
+
+
+TASK BREAKDOWN
+-----------------------------------------------
+CHARTER VS. OPPORTUNITY 90:10
+
+
+TESTING TOOLS USED
+-----------------------------------------------
+Postman (all requests will be sent using Postman)
+
+
+DURATION
+-----------------------------------------------
+45 minutes
+
+
+TEST NOTES
+-----------------------------------------------
+1:20 PM 10/23/2020 Run application using java -jar runTodoManagerRestAPI-1.5.5.jar.
+				   Output: Model todoManager : Number of app versions available (e.g. -version=2, -versionName=profile1) are: 4
+						1 - v0 : prototype
+						2 - v1 : non compressed relationships with guids
+						3 - v2 : compressed relationships with guids
+						4 - v3 : compressed relationships with ids
+						SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+						SLF4J: Defaulting to no-operation (NOP) logger implementation
+						SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+						Using model todoManager
+						Will configure app as release version v3 : compressed relationships with ids 
+				   Hence we are using release version v3
+
+1:22 PM 10/23/2020 Test GET http://localhost:4567/todos - successfully returned all the instances of todos
+				   By default, the response we get is in JSON format
+				   
+				   Possible vulnerability: 
+				   We noticed some differences between the response that we get and the documentation.
+				   We received 5 fields for the first todo object: id, title, doneStatus, decription and tasksof
+				   And 6 fields for the second todo object: id, title, doneStatus, decription, categories and tasksof
+				   However, the example JSON output from API calls says that we should only expected 4 fields: id, title, doneStatus, description
+				   This is a possible vulnerability as the output of the JSON is not standardized.
+
+1:25 PM 10/23/2020 Test GET http://localhost:4567/todos in XML format - successfully returned all the instances of todo in XML format
+
+1:26 PM 10/23/2020 Test HEAD http://localhost:4567/todos in XML format and in JSON format - successfully returned headers for all instances of todo passed
+
+1:28 PM 10/23/2020 New test idea: Test GET http://localhost:4567/todo (invalid endpoint) in JSON format 
+				   We obtain no response
+
+1:30 PM 10/23/2020 New test idea: Investigate Test GET http://localhost:4567/todoinvalid in invalid endpoint in JSON format 
+				   Same result as previous test 
+
+1:31 PM 10/23/2020 New test idea: Test POST http://localhost:4567/todos in JSON format with no data
+				   We receive an errorMessage: "title : field is mandatory"
+
+1:32 PM 10/23/2020 Test POST http://localhost:4567/todos in JSON format with "title": "Testing create todo"
+				   Returned the todo object that was created
+				   {
+						"id": "6",
+						"title": "Testing create todo",
+						"doneStatus": "false",
+						"description": ""
+					}
+			   
+1:34 PM 10/23/2020 New test idea: Investigate Test GET http://localhost:4567/todos to see if the object is persisted and created
+				   Success: we can see the todo object is created and we now have 3 todo objects from GET http://localhost:4567/todos 
+
+				   Possible vulnerability:
+				   Notice the id assignment to TODO object is random as we went from 1, 2, to 6 for the newly created object. 
+
+1:35 PM 10/23/2020 Create another todo object using POST http://localhost:4567/todos with 
+{
+	"title": "Testing create todo 2"
+}
+
+to see if the ID assignment is random - the new id is now 7, hence the todo objects id jumped from id 1, 2 to 6, 7
+
+1:36 PM 10/23/2020 Test GET http://localhost:4567/todos/7 to get the object we just created
+
+1:37 PM 10/23/2020 Test HEAD http://localhost:4567/todos/7
+
+1:39 PM 10/23/2020 Test POST http://localhost:4567/todos/7
+					{
+						"description": "Test adding description to todo object"
+					}
+
+1:40 PM 10/23/2020 Test PUT http://localhost:4567/todos/7
+					{
+						"description": "put"
+					}
+
+					Error: "title: field is mandatory"
+
+
+1:41 PM 10/23/2020 Test PUT http://localhost:4567/todos/7
+					{
+						"title": "Testing create todo 2",
+						"description": "put"
+					}
+
+1:43 PM 10/23/2020 Test DELETE http://localhost:4567/todos/7
+				   
+				   Potential vulnerability: we have not received any response. Hence the user won't know if it was successfully deleted or not.. 
+
+1:44 PM 10/23/2020 Use GET http://localhost:4567/todos/ to verify if the object was deleted - yes
+
+1:46 PM 10/23/2020 GET http://localhost:4567/todos/1/tasksof - good	 			   
+
+1:47 PM 10/23/2020 HEAD http://localhost:4567/todos/1/tasksof - success
+
+1:49 PM 10/23/2020 POST http://localhost:4567/todos/6/tasksof 
+
+				   Potential vulnerability: I did not add any body for the request, however, it automatically assigned and created task 2
+				   							This could lead to unexpected behaviors.
+
+1:51 PM 10/23/2020 DELETE http://localhost:4567/todos/6/tasksof/2
+
+1:53 PM 10/23/2020 GET http://localhost:4567/todos/1/categories
+
+1:54 PM 10/23/2020 HEAD http://localhost:4567/todos/1/categories
+
+1:56 PM 10/23/2020 POST http://localhost:4567/todos/1/categories
+					{
+						"id": "2"
+					}
+
+1:58 PM 10/23/2020 DELETE http://localhost:4567/todos/6/categories/2
+
+2:00 PM 10/23/2020 GET http://localhost:4567/projects
+
+2:02 PM 10/23/2020 HEAD http://localhost:4567/projects
+
+2:04 PM 10/23/2020 POST http://localhost:4567/projects - succesfully created project without request body
+
+2:05 PM 10/23/2020 Test GET /shutdown to shutdown the api server
+2:05 PM 10/23/2020 Ending session
+
+AREAS NOT CONVERED
+-----------------------------------------------
+/projects/:id
+/projects/:id/categories
+/projects/:id/categories/:id
+/projects/:id/tasks
+/projects/:id/tasks/:id
+/categories
+/categories/:id
+/categories/:id/projects
+/categories/:id/projects/:id
+/categories/:id/todos
+/categories/:id/todos/:id
+/docs
+
+SUMMARY OF SESSION FINDINGS
+-----------------------------------------------
+	- No bugs were found with the API endpoints when tested with typical data intended for the use of the application as our charter entails.
+	- All endpoints behaved as expected and conformed to the API documentation. 
+	- There are still a lot of remaining endpoints yet to be tested.
+	- Another testing session should be scheduled to test the remaining endpoints.
+	- In conclusion the API endpoints behaves as expected when given valid data.
+
+SUMMARY OF CONCERNS IDENTIFIED IN SESSION
+-----------------------------------------------
+However, there are few vulnerabilities where the client does not receive a response confirming the that creation/deletion of an object is done successfully or failed.
+Hence, this could cause the same request to be triggered multiple times which is bad for an API. 
+The API should notice the client whenever a request was succesful or unsuccessful.
+Also, the reponse for GET /todos might caused some ambiguity as the response objects we got did not match the ones outlined in the documentation (we received more fields than expected).
+
+NEW TESTING IDEAS
+-----------------------------------------------
+	- test endpoints different data format but encoded differently (e.g. binary, GraphQL, form-data, etc.)
+	- test endpoints different headers
+	- test endpoints with different query parameters 
+	- test endpoints in different order
+	- test endpoints with invalid parameters
+	- test invalid endpoints 
+	- test REST API while in production
+	- test API with an authorization module
+	- test a different version of the application (e.g. v1,v2,v3,v4)
