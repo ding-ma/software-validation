@@ -1,22 +1,20 @@
-import json
-
 ##########################
 ###     ENDPOINTS      ###
 ##########################
 
-url = "http://localhost:4567/todos"
-url_id = "http://localhost:4567/todos/%d"
-url_id_tasksof = "http://localhost:4567/todos/%d/tasksof"
-url_id_tasksof_delete = "http://localhost:4567/todos/%d/tasksof/%d"
-url_id_categories = "http://localhost:4567/todos/%d/categories"
-url_id_categories_delete = "http://localhost:4567/todos/%d/categories/%d"
+url_todo = "http://localhost:4567/todos"
+url_todo_id = "http://localhost:4567/todos/%d"
+url_tod_id_tasksof = "http://localhost:4567/todos/%d/tasksof"
+url_tod_id_tasksof_delete = "http://localhost:4567/todos/%d/tasksof/%d"
+url_todo_id_categories = "http://localhost:4567/todos/%d/categories"
+url_todo_id_categories_delete = "http://localhost:4567/todos/%d/categories/%d"
 
 ##########################
 ###     JSON DATA      ###
 ##########################
 
 # post data
-todo_data = { 
+todo_data = {
   "title": "bore et dolore magna",
   "doneStatus": False,
   "description": "it amet, consectetur"
