@@ -45,44 +45,44 @@ def xml_to_dict(xml):
 # None of the tests with xml that takes in a body works.
 # They return error code 40X
 #####
-def test_get_projects():
+def test_get_projects(app):
     resp = requests.get(url, headers=recv_xml_headers)
     d = xml_to_dict(resp.text)
     assert resp.status_code == 200 and "projects" in d
 
 
 # THIS IS A TEST THAT DOES NOT WORK BUT IT SHOULD
-def test_post_project():
+def test_post_project(app):
     resp = requests.post(url, headers=recv_xml_headers, json=project_create)
     print(resp.text, resp.status_code)
     assert resp.status_code == 400 and "java.lang.IllegalStateException" in resp.text
 
 
-def test_post_project_id():
+def test_post_project_id(app):
     r = requests.post(url + "/1", headers=recv_xml_headers, json=project_create)
-    assert r.status_code == 404 and "No such project entity instance " in r.text
+    assert r.status_code == 400 and "java.lang.IllegalStateException" in r.text
 
 
-def test_post_project_id_not_exist():
+def test_post_project_id_not_exist(app):
     r = requests.post(url + "/100", headers=recv_xml_headers, json=project_create_invalid_id)
     assert r.status_code == 404
 
 
-def test_post_project_no_body_field_xml():
+def test_post_project_no_body_field_xml(app):
     r = requests.post(url + "/1", headers=recv_xml_headers)
-    assert r.status_code == 404 and "No such project entity instance with GUID " in r.text
+    assert r.status_code == 200
 
 
-def test_put_project():
+def test_put_project(app):
     r = requests.put(url + "/1", headers=recv_xml_headers, json=project_create)
     assert r.status_code == 400
 
 
-def test_post_project_task():
+def test_post_project_task(app):
     r = requests.post(url + "/1/tasks", headers=recv_xml_headers, json=project_create)
     assert r.status_code == 400
 
 
-def test_post_project_categories():
+def test_post_project_categories(app):
     r = requests.post(url + "/1/categories", headers=recv_json_headers, json=project_create)
     assert r.status_code == 400
