@@ -1,8 +1,6 @@
-import json
-
+from ..headers import *
 import requests
 import xmltodict
-
 import json
 from .todos_data import *
 
@@ -17,7 +15,6 @@ def xml_to_dict_projects(xml):
     d = json.loads(json.dumps(xmltodict.parse(xml)))
     d["projects"] = d["projects"]["project"]
     return d
-
 
 def xml_to_dict_categories(xml):    
     """ Help function to turn xml into a dict """
@@ -39,7 +36,7 @@ def test_get_todos_head():
     r_todos = requests.get(url, headers=recv_xml_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
-    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET
+    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
     assert r.status_code == 200 and r.headers == r_todos.headers and not r.content
 
 def test_post_todos_xml_json():
