@@ -1,6 +1,4 @@
-from ..headers import *
 import requests
-import json
 
 url = "http://localhost:4567/todos"
 
@@ -9,7 +7,7 @@ def test_post_todos_empty_data():
     # must return an error message saying that the "title" field is required in a post request
     assert r.status_code == 400 and "title : field is mandatory" in r.json()["errorMessages"]
 # # todo validate for any side effect
-# # todo confirms operation of each api 
+# # todo confirms operation of each api
 
 
 ######################################
@@ -20,7 +18,6 @@ def test_post_todos_empty_data():
 # forget to put an id: /todos/tasksof test no ide before tasksof and no id after tasksof
 # /todo
 # /categories
-# ... 
+# ...
 # "we should be able to create todo without a ID using the field values in the body of the messag" try one iwth ID
-# if we are missing some id ? 
-
+# if we are missing some id ?

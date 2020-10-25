@@ -1,14 +1,16 @@
-from ..headers import *
-import requests
 import json
+
+import requests
+
+from ..headers import *
 
 url = "http://localhost:4567/todos"
 
 # post data
 todo_data = json.dumps({
-  "title": "bore et dolore magna",
-  "doneStatus": False,
-  "description": "it amet, consectetur"
+    "title": "bore et dolore magna",
+    "doneStatus": False,
+    "description": "it amet, consectetur"
 })
 
 todo_data2 = json.dumps({
@@ -77,7 +79,7 @@ def test_head_todos_id():
     r_todos = requests.get(url_id % 1, headers=recv_json_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
-    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
+    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET
     assert r.status_code == 200 and r.headers == r_todos.headers and not r.content
 
 def test_post_todos_id():
@@ -116,12 +118,12 @@ def test_head_todos_id_tasksof():
     r_todos = requests.get(url_id_tasksof % 1, headers=recv_json_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
-    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
+    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET
     assert r.status_code == 200 and r.headers == r_todos.headers and not r.content
 
 def test_post_todos_id_tasksof():
     """ Create an instance of a relationship named tasksof between todo instance :id and the project instance represented by the id in the body of the message  """
-    
+
     # first create a new todo
     r = requests.post(url,data=todo_data2, headers=send_json_recv_json_headers)
     todo = r.json()
@@ -131,13 +133,13 @@ def test_post_todos_id_tasksof():
     project = {
         "id": "1"
     }
-    
+
     # create a relationship between todo instance we just created and the project instance represented by the id in the body of the message
     r = requests.post(url_id_tasksof % todo_id, data=json.dumps(project), headers=send_json_recv_json_headers)
 
     # verify that we created a tasksof relationship with "id" == 1
     modified_todo = requests.get(url_id % todo_id , headers=recv_json_headers).json()["todos"][0]
-    
+
     assert r.status_code == 201 and "tasksof" in modified_todo and project in modified_todo["tasksof"]
 
 ###################################
@@ -149,7 +151,7 @@ url_id_tasksof_delete = "http://localhost:4567/todos/%d/tasksof/%d"
 def test_delete_todos_id_tasksof():
     """ Delete the instance of the relationship named tasksof between todo and project using the :id  """
     original_todo = requests.get(url_id % 2 , headers=recv_json_headers).json()["todos"][0]
-  
+
     r = requests.delete(url_id_tasksof_delete % (int(original_todo["id"]), 1), headers=send_json_recv_json_headers)
 
     # verify that we created a tasksof relationship has been deleted
@@ -173,12 +175,12 @@ def test_head_todos_id_categories():
     r_todos = requests.get(url_id_categories % 1, headers=recv_json_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
-    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
+    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET
     assert r.status_code == 200 and r.headers == r_todos.headers and not r.content
 
 def test_post_todos_id_categories():
     """ Create an instance of a relationship named categories between todo instance :id and the category instance represented by the id in the body of the message  """
-    
+
     # first create a new todo
     r = requests.post(url,data=todo_data3, headers=send_json_recv_json_headers)
     todo = r.json()
@@ -188,13 +190,13 @@ def test_post_todos_id_categories():
     category = {
         "id": "1"
     }
-    
+
     # create a relationship between todo instance we just created and the project instance represented by the id in the body of the message
     r = requests.post(url_id_categories % todo_id, data=json.dumps(category), headers=send_json_recv_json_headers)
 
     # verify that we created a categories relationship with "id" == 1
     modified_todo = requests.get(url_id % todo_id , headers=recv_json_headers).json()["todos"][0]
-    
+
     assert r.status_code == 201 and "categories" in modified_todo and category in modified_todo["categories"]
 
 
@@ -207,7 +209,7 @@ url_id_categories_delete = "http://localhost:4567/todos/%d/categories/%d"
 def test_delete_todos_id_categories():
     """ Delete the instance of the relationship named categories between todo and category using the :id  """
     original_todo = requests.get(url_id % 1 , headers=recv_json_headers).json()["todos"][0]
-  
+
     r = requests.delete(url_id_categories_delete % (int(original_todo["id"]), 1), headers=send_json_recv_json_headers)
 
     # verify that we created a categories relationship has been deleted
