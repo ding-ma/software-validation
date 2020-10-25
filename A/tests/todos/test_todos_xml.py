@@ -62,15 +62,16 @@ def test_post_todos_xml_xml():
 #######################
 
 def test_get_todos_id():
-    test_id= 1
-    r = requests.get(url_id % test_id, headers=recv_xml_headers)
+    test_id = 1
+    r = requests.get(url_todo_id % test_id, headers=recv_xml_headers)
     todo = xml_to_dict_todos(r.text)
     # make sure only one id object with 1 is returned
     assert r.status_code == 200 and "todos" in todo and int(todo["todos"]["id"]) == test_id
 
+
 def test_head_todos_id():
-    r = requests.head(url_id % 1, headers=recv_xml_headers)
-    r_todos = requests.get(url_id % 1, headers=recv_xml_headers)
+    r = requests.head(url_todo_id % 1, headers=recv_xml_headers)
+    r_todos = requests.get(url_todo_id % 1, headers=recv_xml_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
     # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
@@ -78,20 +79,21 @@ def test_head_todos_id():
 
 def test_post_todos_id():
     """ Amend a specific instances of todo using a id with a body containing the fields to amend  """
-    r = requests.post(url_id % 1, data=todo_xml, headers=send_xml_recv_xml_headers)
+    r = requests.post(url_todo_id % 1, data=todo_xml, headers=send_xml_recv_xml_headers)
     res = r.text
-    todo = requests.get(url_id % 1, headers=recv_xml_headers).text
+    todo = requests.get(url_todo_id % 1, headers=recv_xml_headers).text
     assert r.status_code == 200 and res in todo
 
 def test_put_todos_id():
-    r = requests.put(url_id % 1,data=todo_xml_put, headers=send_xml_recv_xml_headers)
+    r = requests.put(url_todo_id % 1, data=todo_xml_put, headers=send_xml_recv_xml_headers)
     res = r.text
-    todo = requests.get(url_id % 1, headers=recv_xml_headers).text
+    todo = requests.get(url_todo_id % 1, headers=recv_xml_headers).text
     assert r.status_code == 200 and res in todo
 
+
 def test_delete_todos_id():
-    deleted_todo = requests.get(url_id % 1, headers=recv_xml_headers).text
-    r = requests.delete(url_id % 1, headers=send_xml_recv_xml_headers)
+    deleted_todo = requests.get(url_todo_id % 1, headers=recv_xml_headers).text
+    r = requests.delete(url_todo_id % 1, headers=send_xml_recv_xml_headers)
     todos = requests.get(url_todo, headers=recv_xml_headers).text
     assert r.status_code == 200 and deleted_todo not in todos
 
@@ -102,13 +104,14 @@ def test_delete_todos_id():
 
 def test_get_todos_id_tasksof():
     """ Return all the project items related to todo, with given id, by the relationship named tasksof """
-    r = requests.get(url_id_tasksof % 1, headers=recv_xml_headers)
+    r = requests.get(url_tod_id_tasksof % 1, headers=recv_xml_headers)
     d = xml_to_dict_projects(r.text)
     assert r.status_code == 200 and "projects" in d
 
+
 def test_head_todos_id_tasksof():
-    r = requests.head(url_id_tasksof % 1, headers=recv_xml_headers)
-    r_todos = requests.get(url_id_tasksof % 1, headers=recv_xml_headers)
+    r = requests.head(url_tod_id_tasksof % 1, headers=recv_xml_headers)
+    r_todos = requests.get(url_tod_id_tasksof % 1, headers=recv_xml_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
     # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
@@ -120,12 +123,12 @@ def test_head_todos_id_tasksof():
 
 def test_delete_todos_id_tasksof():
     """ Delete the instance of the relationship named tasksof between todo and project using the :id  """
-    original_todo = requests.get(url_id % 2 , headers=recv_xml_headers).text
-  
-    r = requests.delete(url_id_tasksof_delete % (2, 1), headers=send_xml_recv_xml_headers)
+    original_todo = requests.get(url_todo_id % 2, headers=recv_xml_headers).text
+
+    r = requests.delete(url_tod_id_tasksof_delete % (2, 1), headers=send_xml_recv_xml_headers)
 
     # verify that we created a tasksof relationship has been deleted
-    modified_todo = requests.get(url_id % 2 , headers=recv_xml_headers).text
+    modified_todo = requests.get(url_todo_id % 2, headers=recv_xml_headers).text
 
     assert r.status_code == 200 and "tasksof" not in modified_todo and "tasksof" in original_todo
 
@@ -135,13 +138,14 @@ def test_delete_todos_id_tasksof():
 
 def test_get_todos_id_categories():
     """ Return all the category items related to todo, with given id, by the relationship named categories """
-    r = requests.get(url_id_categories % 1, headers=recv_xml_headers)
+    r = requests.get(url_todo_id_categories % 1, headers=recv_xml_headers)
     d = xml_to_dict_categories(r.text)
     assert r.status_code == 200 and "categories" in d
 
+
 def test_head_todos_id_categories():
-    r = requests.head(url_id_categories % 1, headers=recv_xml_headers)
-    r_todos = requests.get(url_id_categories % 1, headers=recv_xml_headers)
+    r = requests.head(url_todo_id_categories % 1, headers=recv_xml_headers)
+    r_todos = requests.get(url_todo_id_categories % 1, headers=recv_xml_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
     # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
@@ -155,12 +159,12 @@ def test_head_todos_id_categories():
 
 def test_delete_todos_id_categories():
     """ Delete the instance of the relationship named categories between todo and category using the :id  """
-    original_todo = requests.get(url_id % 1 , headers=recv_xml_headers).text
-  
-    r = requests.delete(url_id_categories_delete % (1, 1), headers=send_xml_recv_xml_headers)
+    original_todo = requests.get(url_todo_id % 1, headers=recv_xml_headers).text
+
+    r = requests.delete(url_todo_id_categories_delete % (1, 1), headers=send_xml_recv_xml_headers)
 
     # verify that we created a categories relationship has been deleted
-    modified_todo = requests.get(url_id % 1, headers=recv_xml_headers).text
+    modified_todo = requests.get(url_todo_id % 1, headers=recv_xml_headers).text
 
     assert r.status_code == 200 and "categories" not in modified_todo and "categories" in original_todo
 
