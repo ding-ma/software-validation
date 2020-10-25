@@ -1,16 +1,18 @@
-from ..headers import *
 import requests
 import xmltodict
-import json
-from .todos_data import *
 
-def xml_to_dict_todos(xml):    
+from .todos_data import *
+from ..headers import *
+
+
+def xml_to_dict_todos(xml):
     """ Help function to turn xml into a dict """
     d = json.loads(json.dumps(xmltodict.parse(xml)))
     d["todos"] = d["todos"]["todo"]
     return d
 
-def xml_to_dict_projects(xml):    
+
+def xml_to_dict_projects(xml):
     """ Help function to turn xml into a dict """
     d = json.loads(json.dumps(xmltodict.parse(xml)))
     d["projects"] = d["projects"]["project"]
@@ -27,13 +29,14 @@ def xml_to_dict_categories(xml):
 #######################
 
 def test_get_todos():
-    r = requests.get(url, headers=recv_xml_headers)
+    r = requests.get(url_todo, headers=recv_xml_headers)
     d = xml_to_dict_todos(r.text)
     assert r.status_code == 200 and "todos" in d
 
+
 def test_get_todos_head():
-    r = requests.head(url, headers=recv_xml_headers)
-    r_todos = requests.get(url, headers=recv_xml_headers)
+    r = requests.head(url_todo, headers=recv_xml_headers)
+    r_todos = requests.get(url_todo, headers=recv_xml_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
     # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
@@ -41,17 +44,17 @@ def test_get_todos_head():
 
 def test_post_todos_xml_json():
     """ Create existing title twice. """
-    r = requests.post(url,data=todo_xml, headers=send_xml_headers)
+    r = requests.post(url_todo, data=todo_xml, headers=send_xml_headers)
     res = r.json()
-    todos_list = requests.get(url).json()["todos"]
+    todos_list = requests.get(url_todo).json()["todos"]
     assert r.status_code == 201 and res in todos_list
     # NOTE: difference between documented input (sample data) and actual accepted input errorMessage: "Invalid Creation: Failed Validation: Not allowed to create with id"
 
 def test_post_todos_xml_xml():
     """ Create existing title twice. """
-    r = requests.post(url,data=todo_xml, headers=send_xml_recv_xml_headers)
+    r = requests.post(url_todo, data=todo_xml, headers=send_xml_recv_xml_headers)
     res = r.text
-    todos = requests.get(url,headers=recv_xml_headers).text
+    todos = requests.get(url_todo, headers=recv_xml_headers).text
     assert r.status_code == 201 and res in todos
 
 #######################
@@ -89,7 +92,7 @@ def test_put_todos_id():
 def test_delete_todos_id():
     deleted_todo = requests.get(url_id % 1, headers=recv_xml_headers).text
     r = requests.delete(url_id % 1, headers=send_xml_recv_xml_headers)
-    todos = requests.get(url, headers=recv_xml_headers).text
+    todos = requests.get(url_todo, headers=recv_xml_headers).text
     assert r.status_code == 200 and deleted_todo not in todos
 
 

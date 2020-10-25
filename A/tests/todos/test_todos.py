@@ -1,35 +1,37 @@
-from ..headers import *
 import requests
-import json
+
 from .todos_data import *
+from ..headers import *
+
 
 #######################
 ###     /todos      ###
 #######################
 
 def test_get_todos():
-    r = requests.get(url, headers=recv_json_headers)
+    r = requests.get(url_todo, headers=recv_json_headers)
     assert r.status_code == 200 and "todos" in r.json()
 
+
 def test_head_todos():
-    r = requests.head(url)
-    r_todos = requests.get(url, headers=recv_json_headers)
+    r = requests.head(url_todo)
+    r_todos = requests.get(url_todo, headers=recv_json_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
     # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
     assert r.status_code == 200 and r.headers == r_todos.headers and not r.content
 
 def test_post_todos_json_json():
-    r = requests.post(url,data=json.dumps(todo_data), headers=send_json_recv_json_headers)
+    r = requests.post(url_todo, data=json.dumps(todo_data), headers=send_json_recv_json_headers)
     res = r.json()
-    todos = requests.get(url).json()["todos"]
+    todos = requests.get(url_todo).json()["todos"]
     assert r.status_code == 201 and res in todos
     # NOTE: potential vulnerability, False in Python and "false" in Java, boolean conversion is vulnerable
 
 def test_post_todos_json_xml():
-    r = requests.post(url,data=json.dumps(todo_data), headers=send_json_recv_xml_headers)
+    r = requests.post(url_todo, data=json.dumps(todo_data), headers=send_json_recv_xml_headers)
     res = r.text
-    todos = requests.get(url,headers=recv_xml_headers).text
+    todos = requests.get(url_todo, headers=recv_xml_headers).text
     assert r.status_code == 201 and res in todos
 
 #######################
@@ -68,7 +70,7 @@ def test_put_todos_id():
 def test_delete_todos_id():
     deleted_todo = requests.get(url_id % 2, headers=recv_json_headers).json()["todos"][0]
     r = requests.delete(url_id % 2, headers=send_json_recv_json_headers)
-    todos = requests.get(url, headers=recv_json_headers).json()["todos"]
+    todos = requests.get(url_todo, headers=recv_json_headers).json()["todos"]
     assert r.status_code == 200 and deleted_todo not in todos
 
 ###############################
@@ -92,7 +94,7 @@ def test_post_todos_id_tasksof():
     """ Create an instance of a relationship named tasksof between todo instance :id and the project instance represented by the id in the body of the message  """
     
     # first create a new todo
-    r = requests.post(url,data=json.dumps(todo_data2), headers=send_json_recv_json_headers)
+    r = requests.post(url_todo, data=json.dumps(todo_data2), headers=send_json_recv_json_headers)
     todo = r.json()
     todo_id = int(todo["id"])
 
@@ -146,7 +148,7 @@ def test_post_todos_id_categories():
     """ Create an instance of a relationship named categories between todo instance :id and the category instance represented by the id in the body of the message  """
     
     # first create a new todo
-    r = requests.post(url,data=json.dumps(todo_data3), headers=send_json_recv_json_headers)
+    r = requests.post(url_todo, data=json.dumps(todo_data3), headers=send_json_recv_json_headers)
     todo = r.json()
     todo_id = int(todo["id"])
 

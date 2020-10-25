@@ -1,10 +1,8 @@
-import json
-
 ##########################
 ###     ENDPOINTS      ###
 ##########################
 
-url = "http://localhost:4567/todos"
+url_todo = "http://localhost:4567/todos"
 url_id = "http://localhost:4567/todos/%d"
 url_id_tasksof = "http://localhost:4567/todos/%d/tasksof"
 url_id_tasksof_delete = "http://localhost:4567/todos/%d/tasksof/%d"
