@@ -1,37 +1,5 @@
 import json
-
-import requests
-
-from ..headers import *
-
-url = "http://localhost:4567/todos"
-
-# post data
-todo_data = json.dumps({
-    "title": "bore et dolore magna",
-    "doneStatus": False,
-    "description": "it amet, consectetur"
-})
-
-todo_data2 = json.dumps({
-  "title": "New todo",
-  "doneStatus": False,
-  "description": "For /todos/:id/tasksof"
-})
-
-todo_data3 = json.dumps({
-  "title": "New todo for category",
-  "doneStatus": False,
-  "description": "For /todos/:id/categories"
-})
-
-todo_put_data = json.dumps({
-  "title": "Put change",
-  "doneStatus": True,
-  "description": "YOLO"
-})
-
-
+from .todos_data import *
 
 #######################
 ###     /todos      ###
@@ -50,14 +18,14 @@ def test_head_todos():
     assert r.status_code == 200 and r.headers == r_todos.headers and not r.content
 
 def test_post_todos_json_json():
-    r = requests.post(url,data=todo_data, headers=send_json_recv_json_headers)
+    r = requests.post(url,data=json.dumps(todo_data), headers=send_json_recv_json_headers)
     res = r.json()
     todos = requests.get(url).json()["todos"]
     assert r.status_code == 201 and res in todos
     # NOTE: potential vulnerability, False in Python and "false" in Java, boolean conversion is vulnerable
 
 def test_post_todos_json_xml():
-    r = requests.post(url,data=todo_data, headers=send_json_recv_xml_headers)
+    r = requests.post(url,data=json.dumps(todo_data), headers=send_json_recv_xml_headers)
     res = r.text
     todos = requests.get(url,headers=recv_xml_headers).text
     assert r.status_code == 201 and res in todos
@@ -66,13 +34,12 @@ def test_post_todos_json_xml():
 ###   /todos/:id    ###
 #######################
 
-url_id = "http://localhost:4567/todos/%d"
-
 def test_get_todos_id():
-    r = requests.get(url_id % 1, headers=recv_json_headers)
+    test_id = 1
+    r = requests.get(url_id % test_id, headers=recv_json_headers)
     todo = r.json()
     # make sure only one id object is returned
-    assert r.status_code == 200 and "todos" in todo and len(todo["todos"]) == 1
+    assert r.status_code == 200 and "todos" in todo and len(todo["todos"]) == 1 and int(todo["todos"][0]["id"]) == test_id
 
 def test_head_todos_id():
     r = requests.head(url_id % 1, headers=recv_json_headers)
@@ -84,13 +51,13 @@ def test_head_todos_id():
 
 def test_post_todos_id():
     """ Amend a specific instances of todo using a id with a body containing the fields to amend  """
-    r = requests.post(url_id % 1, data=todo_data, headers=send_json_recv_json_headers)
+    r = requests.post(url_id % 1, data=json.dumps(todo_data), headers=send_json_recv_json_headers)
     res = r.json()
     todo = requests.get(url_id % 1, headers=recv_json_headers).json()["todos"][0]
     assert r.status_code == 200 and res == todo
 
 def test_put_todos_id():
-    r = requests.put(url_id % 2,data=todo_put_data, headers=send_json_recv_json_headers)
+    r = requests.put(url_id % 2,data=json.dumps(todo_put_data), headers=send_json_recv_json_headers)
     res = r.json()
     todo = requests.get(url_id % 2, headers=recv_json_headers).json()["todos"][0]
     assert r.status_code == 200 and res == todo
@@ -105,8 +72,6 @@ def test_delete_todos_id():
 ###############################
 ###   /todos/:id/tasksof    ###
 ###############################
-
-url_id_tasksof = "http://localhost:4567/todos/%d/tasksof"
 
 def test_get_todos_id_tasksof():
     """ Return all the project items related to todo, with given id, by the relationship named tasksof """
@@ -125,7 +90,7 @@ def test_post_todos_id_tasksof():
     """ Create an instance of a relationship named tasksof between todo instance :id and the project instance represented by the id in the body of the message  """
 
     # first create a new todo
-    r = requests.post(url,data=todo_data2, headers=send_json_recv_json_headers)
+    r = requests.post(url,data=json.dumps(todo_data2), headers=send_json_recv_json_headers)
     todo = r.json()
     todo_id = int(todo["id"])
 
@@ -146,7 +111,6 @@ def test_post_todos_id_tasksof():
 ###   /todos/:id/tasksof/:id    ###
 ###################################
 
-url_id_tasksof_delete = "http://localhost:4567/todos/%d/tasksof/%d"
 
 def test_delete_todos_id_tasksof():
     """ Delete the instance of the relationship named tasksof between todo and project using the :id  """
@@ -162,8 +126,6 @@ def test_delete_todos_id_tasksof():
 ##################################
 ###   /todos/:id/categories    ###
 ##################################
-
-url_id_categories = "http://localhost:4567/todos/%d/categories"
 
 def test_get_todos_id_categories():
     """ Return all the category items related to todo, with given id, by the relationship named categories """
@@ -182,7 +144,7 @@ def test_post_todos_id_categories():
     """ Create an instance of a relationship named categories between todo instance :id and the category instance represented by the id in the body of the message  """
 
     # first create a new todo
-    r = requests.post(url,data=todo_data3, headers=send_json_recv_json_headers)
+    r = requests.post(url,data=json.dumps(todo_data3), headers=send_json_recv_json_headers)
     todo = r.json()
     todo_id = int(todo["id"])
 
@@ -199,12 +161,9 @@ def test_post_todos_id_categories():
 
     assert r.status_code == 201 and "categories" in modified_todo and category in modified_todo["categories"]
 
-
 ######################################
 ###   /todos/:id/categories/:id    ###
 ######################################
-
-url_id_categories_delete = "http://localhost:4567/todos/%d/categories/%d"
 
 def test_delete_todos_id_categories():
     """ Delete the instance of the relationship named categories between todo and category using the :id  """

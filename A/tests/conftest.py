@@ -11,3 +11,4 @@ def app():
     time.sleep(0.5)
     yield
     subprocess.call(['curl', 'http://localhost:4567/shutdown'], shell=True)
+

@@ -1,3 +1,5 @@
+import json
+
 ##########################
 ###     ENDPOINTS      ###
 ##########################
@@ -14,36 +16,51 @@ url_id_categories_delete = "http://localhost:4567/todos/%d/categories/%d"
 ##########################
 
 # post data
-todo_data = json.dumps({
+todo_data = { 
   "title": "bore et dolore magna",
   "doneStatus": False,
   "description": "it amet, consectetur"
-})
+}
 
-todo_data2 = json.dumps({
+todo_data2 = {
   "title": "New todo",
   "doneStatus": False,
   "description": "For /todos/:id/tasksof"
-})
+}
 
-todo_data3 = json.dumps({
+todo_data3 = {
   "title": "New todo for category",
   "doneStatus": False,
   "description": "For /todos/:id/categories"
-})
+}
 
-todo_put_data = json.dumps({
+todo_put_data = {
   "title": "Put change",
   "doneStatus": True,
   "description": "YOLO"
-})
+}
 
 #######################
 ###     XML DATA    ###
 #######################
 
 todo_xml = """<todo>
-  <doneStatus>false</doneStatus>
-  <description>it amet, consectetur</description>
+  <doneStatus>true</doneStatus>
+  <description>it amet, asdasdconsectetur</description>
   <title>bore et dolore magna</title>
+</todo>"""
+todo_xml2 = """<todo>
+  <doneStatus>true</doneStatus>
+  <description>For /todos/:id/tasksof xml</description>
+  <title>newtodo xml</title>
+</todo>"""
+todo_xml3 = """<todo>
+  <doneStatus>false</doneStatus>
+  <description>for /todos/:id/categories xml</description>
+  <title>New todo for category xml</title>
+</todo>"""
+todo_xml_put = """<todo>
+  <doneStatus>false</doneStatus>
+  <description>YOLO</description>
+  <title>Put change xml</title>
 </todo>"""
