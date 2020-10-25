@@ -9,6 +9,7 @@ verify_ssl = true
 pytest = "*"
 requests = "*"
 json2xml = "*"
+xmltodict = "*"
 
 [requires]
 python_version = "3.8"

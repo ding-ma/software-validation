@@ -1,0 +1,281 @@
+CHARTER
+-----------------------------------------------
+Identify documented and undocumented “rest api todo list manager” capabilities.
+
+
+Build
+-----------------------------------------------
+runTodoManagerRestAPI-1.5.5.jar
+
+
+Area
+-----------------------------------------------
+Typical Scenarios - Main functions and capabilites - Part 2
+
+
+Environment
+-----------------------------------------------
+Windows 10
+Screen resolution: 1920x1080
+
+
+START
+-----------------------------------------------
+3:00 PM Oct 23, 2020
+
+Other Data
+-----------------------------------------------
+Written text attachement
+Video of session
+
+TESTER
+-----------------------------------------------
+Ding Ma
+ding.ma@mail.mcgill.ca
+260871301
+
+Petar Basta
+petar.basta@mail.mcgill.ca
+260735072
+
+TASK BREAKDOWN
+-----------------------------------------------
+
+#DURATION
+45 minutes
+
+
+TEST NOTES
+-----------------------------------------------
+The goal of the first part of the test is to figure out if the XML bug we had yesterday was truly a bug.
+We also containerized the application in order to have a consistent behavior.
+
+1500 
+booted up application
+
+we will try to confirm yesterday's bug with the XML
+1501
+create a project
+POST /project {title: "new title"} as xml
+Now, lets try to make a task underneath that project
+
+POST /todos/2/taskof {id:2} as xml
+HTTP404 "Could not find matching value for id"
+
+POST /todos/2/taskof {id:"2"} as xml
+HTTP404 "Could not find matching value for id"
+
+1503
+POST /todos/2/taskof {id:2} as json
+HTTP404         "Could not find thing matching value for id"
+
+POST /todos/2/taskof {id:"2"} as json
+now it works. 
+
+We can now say that the program bugs with XML id inputs. The program expects a string but there are no way to format that in an xml.
+
+
+1505
+GET /project/1
+returns the project with that id as expected
+
+GET /project/10
+HTTP404, "Could not find an instance with projects/10". expected
+
+
+GET /project/1
+returns nothing but HTTP200
+
+GET /project/10
+returns nothing but HTTP404
+
+POST /project/1 {id:null} in xml
+HTPP400         "Failed Validation: id should be ID"
+
+
+1508
+POST /project/1 {id:1} in xml
+HTTP 200, as expected
+
+POST /project/10 {id:1} in xml
+HTTP404        "No such project entity instance with GUID or ID 10 found"
+
+
+1509
+PUT /project/1 {id:1} in xml
+HTTP 200, as expected
+
+PUT /project/10 {id:10} in xml
+HTTP404        "No such project entity instance with GUID or ID 10 found"
+
+PUT /project/10 {id:null} in xml
+HTTP404         "Invalid GUID for 10 entity project"
+
+PUT /project/1 {id:null} in xml
+HTPP400         "Failed Validation: id should be ID"
+
+
+1511
+DELETE /project/1 with body in xml
+HTTP 200 as expected
+
+try to delete again
+DELETE /project/1
+HTTP404         "Could not find any instances with projects/1" this is expected
+
+try to delete one that never existed
+DELETE /project/100
+HTTP404         "Could not find any instances with projects/100" this is expected
+
+
+1514
+GET /projects/1/tasks
+empty project array which is expected. now we will try to create a new project
+
+/projects/null/tasks
+also return empty project array. this should not be allowed
+
+/projects/AAAA/tasks
+also return empty project array. this should not be allowed
+
+
+1517
+now lets try to create a project
+POST /projects/1/tasks {id:1} as xml. 
+return HTTP404 as expected as the category was deleted above
+
+POST /projects/1/tasks {id:2} as xml. 
+works as expected. the project is an empty array
+
+1520
+POST /projects/1/tasks {id:null} as xml. 
+worked but it should not have worked. this is a bug
+
+POST /projects/1/tasks {id:null} as json. 
+worked but it should not have worked. this is a bug
+
+1521
+HEAD projects/1/tasks
+HTTP200 but did not return anything
+
+HEAD projects/100/tasks
+HTTP200 but did not return anything. this is not supposed to happen
+
+1523
+GET /categories
+HTTP200 returns all categories
+
+PUT /categories
+HTTP405 method not allowed
+
+POST /categories {title:"test"} as json
+adds category as expected
+
+1527
+HEAD /categories
+HTTP200 but nothing happens
+
+GET /categories/1
+HTTP200 returns category
+
+1528
+GET /categories/8
+HTTP 404 Category not found, this is expected
+
+POST /categories/1 {title:"random"}
+updates category as expected
+
+1531
+PUT /category/8 {title:"random"}
+works, creates new category
+
+1532
+DELETE /categories/1
+HTTP200 Deletes as expected
+
+DELETE /categories/55
+HTTP404 Category not found
+
+1534
+GET /categories/1/todos
+HTTP200 returns proper todos
+
+HEAD /categories/1/todos
+HTTP200 but nothing happens
+
+1535
+POST /categories/1/todos {id:1} as xml
+Same error whenever submitting id as xml
+
+POST /categories/1/todos {id:1} as json
+works as expected
+
+DELETE /categories/1/todos/1
+HTTP200 deleted the relationship
+
+1538
+GET /categories/1/projects
+HTTP200 returns properly
+
+GET /categories/55/projects
+Nothing returned
+
+1540
+HEAD /categories/1/projects
+HTTP200 but nothing returned (as always)
+
+1541
+POST /categories/1/projects {id:5} as json
+HTTP200
+
+POST /categories/1/projects {id:6} as xml
+Error as always with ID and xml
+
+1546
+GET /categories/1/projects
+HTTP200 relationship to project 5 added
+
+DELETE /categories/1/projects/5
+HTTP200 Deleted successfully
+
+1548
+GET /categories/1/projects
+HTTP200 relationship to project 5 gone, works properly
+
+1549
+GET /docs
+HTTP200 returns entire docs as html
+
+POST /docs {title: "random"} as json
+HTTP404 not found, works since it shouldn't do anything
+
+1552
+POST /shutdown
+HTTP404 not found, works since it shouldn't do anything
+
+GET /shutdown
+Could not get response, server shuts down before sending anything
+
+GET /shutdown
+Could not send request, confirmed shutdown "Error: connect ECONNREFUSED 127.0.0.1:4567"
+
+
+----------------- session end ----------------------------------------
+
+session findings:
+(BUG) XML file does not work well with the application is now confirmed
+(BUG) The circular dependency between project, task, category is missing. we have to do the posts manually everytime 
+(JSON input), ids needs to be as a string input. This will not work in xml
+
+Concerns:
+- 
+
+Testing ideas: 
+- trying out "" and without "" for tests
+- test out the null keyword
+- A PDF with the images from the tests is also available
+
+
+
+
+
