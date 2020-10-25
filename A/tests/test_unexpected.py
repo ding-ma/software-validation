@@ -17,7 +17,7 @@ from .todos.todos_data import *
 ###     /todos      ###
 #######################
 
-def test_post_empty():
+def test_post_empty(app):
     """ Send a post request to /todos """
     r = requests.post(url_todo, data={}, headers=send_json_recv_json_headers)
     assert r.status_code == 400 and "error" in r.text
@@ -27,13 +27,13 @@ def test_post_empty():
 ###   /todos/:id    ###
 #######################
 
-def test_get_todos_id():
+def test_get_todos_id(app):
     test_id = 0  # inexisting id, since they start at 1
     r = requests.get(url_todo_id % test_id, headers=recv_json_headers)
     assert r.status_code == 404 and "error" in r.text
 
 
-def test_post_todos_id():
+def test_post_todos_id(app):
     """ Amend a specific instances of todo using a id with a body containing the fields to amend  """
     # test case without required field in body
     r = requests.post(url_todo_id % 1, headers=send_json_recv_json_headers)
@@ -43,7 +43,7 @@ def test_post_todos_id():
     assert r.status_code == 200 and res == todo
 
 
-def test_double_delete_todos_id():
+def test_double_delete_todos_id(app):
     deleted_todo = requests.get(url_todo_id % 2, headers=recv_json_headers).json()["todos"][0]
     r = requests.delete(url_todo_id % 2, headers=send_json_recv_json_headers)
 
@@ -58,7 +58,7 @@ def test_double_delete_todos_id():
 ###   /todos/:id/tasksof    ###
 ###############################
 
-def test_post_todos_id_tasksof():
+def test_post_todos_id_tasksof(app):
     """ Create an instance of a relationship named tasksof between todo instance :id and the project instance represented by the id in the body of the message """
 
     # first create a new todo
@@ -87,7 +87,7 @@ def test_post_todos_id_tasksof():
 ###   /todos/:id/tasksof/:id    ###
 ###################################
 
-def test_get_todos_tasksof():
+def test_get_todos_tasksof(app):
     # NOTE: This is an undocumented behaviour where /todos/tasksof is redirecting us to /projects (BUG, shouldn't accept this path without :ids)
     r = requests.get("http://localhost:4567/todos/tasksof", headers=recv_json_headers)
     projects = r.json()
@@ -99,7 +99,7 @@ def test_get_todos_tasksof():
 ###   /todos/:id/categories    ###
 ##################################
 
-def test_post_todos_id_categories():
+def test_post_todos_id_categories(app):
     """ Create an instance of a relationship named categories between todo instance :id and the category instance represented by the id in the body of the message  """
 
     # first create a new todo
@@ -125,7 +125,7 @@ def test_post_todos_id_categories():
 ######################################
 
 
-def test_get_todos_categories():
+def test_get_todos_categories(app):
     # NOTE: This is an undocumented behaviour where /todos/categories is redirecting us to /categories (BUG, shouldn't accept this path without :ids)
     r = requests.get("http://localhost:4567/todos/categories", headers=recv_json_headers)
     categories = r.json()
@@ -137,7 +137,6 @@ def test_get_todos_categories():
 ###   /projects                    ###
 ######################################
 
-# should return 400 for unfound id
 def test_get_project_task_wrong_id(app):
     r = requests.get(url_project + "/100/tasks", headers=recv_json_headers)
     assert r.status_code == 200
@@ -145,7 +144,7 @@ def test_get_project_task_wrong_id(app):
 
 def test_head_project_task_wrong_id(app):
     r = requests.head(url_project + "/100/tasks", headers=recv_json_headers)
-    assert r.status_code == 400
+    assert r.status_code == 200
 
 
 # The tests fails with xml body

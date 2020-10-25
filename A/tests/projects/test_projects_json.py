@@ -111,8 +111,6 @@ def test_head_project_task(app):
     assert r.status_code == 200 and not r.content
 
 
-
-
 def test_post_project_task(app):
     r = requests.post(url_project + "/1/tasks", headers=recv_json_headers, json={"id": "1"})
     assert r.status_code == 201

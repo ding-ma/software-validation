@@ -1,3 +1,5 @@
+import json
+
 import requests
 import xmltodict
 
@@ -28,21 +30,21 @@ def xml_to_dict_categories(xml):
 ###     /todos      ###
 #######################
 
-def test_get_todos():
+def test_get_todos(app):
     r = requests.get(url_todo, headers=recv_xml_headers)
     d = xml_to_dict_todos(r.text)
     assert r.status_code == 200 and "todos" in d
 
 
-def test_get_todos_head():
+def test_get_todos_head(app):
     r = requests.head(url_todo, headers=recv_xml_headers)
     r_todos = requests.get(url_todo, headers=recv_xml_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
-    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
+    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET
     assert r.status_code == 200 and r.headers == r_todos.headers and not r.content
 
-def test_post_todos_xml_json():
+def test_post_todos_xml_json(app):
     """ Create existing title twice. """
     r = requests.post(url_todo, data=todo_xml, headers=send_xml_headers)
     res = r.json()
@@ -50,7 +52,7 @@ def test_post_todos_xml_json():
     assert r.status_code == 201 and res in todos_list
     # NOTE: difference between documented input (sample data) and actual accepted input errorMessage: "Invalid Creation: Failed Validation: Not allowed to create with id"
 
-def test_post_todos_xml_xml():
+def test_post_todos_xml_xml(app):
     """ Create existing title twice. """
     r = requests.post(url_todo, data=todo_xml, headers=send_xml_recv_xml_headers)
     res = r.text
@@ -61,7 +63,7 @@ def test_post_todos_xml_xml():
 ###   /todos/:id    ###
 #######################
 
-def test_get_todos_id():
+def test_get_todos_id(app):
     test_id = 1
     r = requests.get(url_todo_id % test_id, headers=recv_xml_headers)
     todo = xml_to_dict_todos(r.text)
@@ -69,29 +71,29 @@ def test_get_todos_id():
     assert r.status_code == 200 and "todos" in todo and int(todo["todos"]["id"]) == test_id
 
 
-def test_head_todos_id():
+def test_head_todos_id(app):
     r = requests.head(url_todo_id % 1, headers=recv_xml_headers)
     r_todos = requests.get(url_todo_id % 1, headers=recv_xml_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
-    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
+    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET
     assert r.status_code == 200 and r.headers == r_todos.headers and not r.content
 
-def test_post_todos_id():
+def test_post_todos_id(app):
     """ Amend a specific instances of todo using a id with a body containing the fields to amend  """
     r = requests.post(url_todo_id % 1, data=todo_xml, headers=send_xml_recv_xml_headers)
     res = r.text
     todo = requests.get(url_todo_id % 1, headers=recv_xml_headers).text
     assert r.status_code == 200 and res in todo
 
-def test_put_todos_id():
+def test_put_todos_id(app):
     r = requests.put(url_todo_id % 1, data=todo_xml_put, headers=send_xml_recv_xml_headers)
     res = r.text
     todo = requests.get(url_todo_id % 1, headers=recv_xml_headers).text
     assert r.status_code == 200 and res in todo
 
 
-def test_delete_todos_id():
+def test_delete_todos_id(app):
     deleted_todo = requests.get(url_todo_id % 1, headers=recv_xml_headers).text
     r = requests.delete(url_todo_id % 1, headers=send_xml_recv_xml_headers)
     todos = requests.get(url_todo, headers=recv_xml_headers).text
@@ -102,26 +104,26 @@ def test_delete_todos_id():
 ###   /todos/:id/tasksof    ###
 ###############################
 
-def test_get_todos_id_tasksof():
+def test_get_todos_id_tasksof(app):
     """ Return all the project items related to todo, with given id, by the relationship named tasksof """
     r = requests.get(url_todo_id_tasksof % 1, headers=recv_xml_headers)
     d = xml_to_dict_projects(r.text)
     assert r.status_code == 200 and "projects" in d
 
 
-def test_head_todos_id_tasksof():
+def test_head_todos_id_tasksof(app):
     r = requests.head(url_todo_id_tasksof % 1, headers=recv_xml_headers)
     r_todos = requests.get(url_todo_id_tasksof % 1, headers=recv_xml_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
-    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
+    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET
     assert r.status_code == 200 and r.headers == r_todos.headers and not r.content
 
 ###################################
 ###   /todos/:id/tasksof/:id    ###
 ###################################
 
-def test_delete_todos_id_tasksof():
+def test_delete_todos_id_tasksof(app):
     """ Delete the instance of the relationship named tasksof between todo and project using the :id  """
     original_todo = requests.get(url_todo_id % 2, headers=recv_xml_headers).text
 
@@ -136,19 +138,19 @@ def test_delete_todos_id_tasksof():
 ###   /todos/:id/categories    ###
 ##################################
 
-def test_get_todos_id_categories():
+def test_get_todos_id_categories(app):
     """ Return all the category items related to todo, with given id, by the relationship named categories """
     r = requests.get(url_todo_id_categories % 1, headers=recv_xml_headers)
     d = xml_to_dict_categories(r.text)
     assert r.status_code == 200 and "categories" in d
 
 
-def test_head_todos_id_categories():
+def test_head_todos_id_categories(app):
     r = requests.head(url_todo_id_categories % 1, headers=recv_xml_headers)
     r_todos = requests.get(url_todo_id_categories % 1, headers=recv_xml_headers)
     r_todos.headers.pop("date")
     r.headers.pop("date")
-    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET 
+    # make sure HEAD does not return a message-body in the response and HTTP headers should be identical to GET
     assert r.status_code == 200 and r.headers == r_todos.headers and not r.content
 
 
@@ -157,7 +159,7 @@ def test_head_todos_id_categories():
 ######################################
 
 
-def test_delete_todos_id_categories():
+def test_delete_todos_id_categories(app):
     """ Delete the instance of the relationship named categories between todo and category using the :id  """
     original_todo = requests.get(url_todo_id % 1, headers=recv_xml_headers).text
 
