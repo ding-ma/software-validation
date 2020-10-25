@@ -25,13 +25,13 @@ todo_data = {
 todo_data2 = {
   "title": "New todo",
   "doneStatus": False,
-  "description": "For /todos/:id/tasksof"
+  "description": "For testing"
 }
 
 todo_data3 = {
   "title": "New todo for category",
   "doneStatus": False,
-  "description": "For /todos/:id/categories"
+  "description": "For test"
 }
 
 todo_put_data = {
@@ -51,12 +51,12 @@ todo_xml = """<todo>
 </todo>"""
 todo_xml2 = """<todo>
   <doneStatus>true</doneStatus>
-  <description>For /todos/:id/tasksof xml</description>
+  <description>For /todos/:id/sdfgsd xml</description>
   <title>newtodo xml</title>
 </todo>"""
 todo_xml3 = """<todo>
   <doneStatus>false</doneStatus>
-  <description>for /todos/:id/categories xml</description>
+  <description>for /todos/:id/sdfg xml</description>
   <title>New todo for category xml</title>
 </todo>"""
 todo_xml_put = """<todo>

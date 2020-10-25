@@ -65,7 +65,7 @@ def test_put_todos_id():
     assert r.status_code == 200 and res == todo
     # NOTE: potential vulnerability, False in Python and "false" in Java, boolean conversion is vulnerable
 
-def test_delete_todos_id():
+def test_delete_todos_id(jar):
     deleted_todo = requests.get(url_id % 2, headers=recv_json_headers).json()["todos"][0]
     r = requests.delete(url_id % 2, headers=send_json_recv_json_headers)
     todos = requests.get(url, headers=recv_json_headers).json()["todos"]
@@ -114,7 +114,7 @@ def test_post_todos_id_tasksof():
 ###################################
 
 
-def test_delete_todos_id_tasksof():
+def test_delete_todos_id_tasksof(jar):
     """ Delete the instance of the relationship named tasksof between todo and project using the :id  """
     original_todo = requests.get(url_id % 2 , headers=recv_json_headers).json()["todos"][0]
   

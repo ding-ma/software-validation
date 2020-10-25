@@ -1,18 +1,17 @@
 import pytest 
+import os, signal
 import subprocess
-import threading 
-import asyncio
+import requests
+import time
 
 @pytest.fixture(scope="function")
-async def app():
-    proc = asyncio.create_subprocess_shell(
-        "java -jar runTodoManagerRestAPI-1.5.5.jar",
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE)
+def jar():
+    proc = subprocess.Popen(["java","-jar","runTodoManagerRestAPI-1.5.5.jar"], shell=True)
+    time.sleep(5)
     yield proc
-    proc.terminate()
-    proc.wait()
-    # proc.kill()
+    # kill this process
+    proc.kill()
+
 
 # # @pytest.fixture(scope="function")
 # # def app():
