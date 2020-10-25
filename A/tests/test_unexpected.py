@@ -72,7 +72,7 @@ def test_post_todos_id_tasksof():
     # This returns {"errorMessages": ["Could not find thing matching value for id"]}
 
     # create a relationship between todo instance we just created and the project instance represented by the id in the body of the message
-    r = requests.post(url_tod_id_tasksof % todo_id, data=project, headers=send_xml_recv_xml_headers)
+    r = requests.post(url_todo_id_tasksof % todo_id, data=project, headers=send_xml_recv_xml_headers)
     # NOTE: this gives us project id not found BUG not working, can't create relationships using XML, also it is not documented how the XML should be
 
     # verify that we created a tasksof relationship with "id" == 1
