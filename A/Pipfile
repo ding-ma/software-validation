@@ -10,6 +10,7 @@ pytest = "*"
 requests = "*"
 json2xml = "*"
 xmltodict = "*"
+pytest-randomly = "*"
 
 [requires]
 python_version = "3.8"
