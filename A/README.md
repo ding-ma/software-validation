@@ -19,3 +19,6 @@ Run TodoManagerRestAPI server with: `java -jar runTodoManagerRestAPI-1.5.5.jar`
 The application can also be ran with docker:
 1. `docker build --tag todomanager:1.5.5 .`
 1. `docker run -p 4567:4567 todomanager:1.5.5`
+
+### Link to Video of our tests working
+The video can be viewed [here](https://youtu.be/ovKQSXOCRxg).
