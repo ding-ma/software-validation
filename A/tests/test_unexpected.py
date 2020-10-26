@@ -138,17 +138,20 @@ def test_get_todos_categories(app):
 ###   /projects                    ###
 ######################################
 
+
+# NOTE: this test should return error as id does not exist
 def test_get_project_task_wrong_id(app):
     r = requests.get(url_project + "/100/tasks", headers=recv_json_headers)
     assert r.status_code == 200
 
 
+# NOTE: this test should return error as id does not exist
 def test_head_project_task_wrong_id(app):
     r = requests.head(url_project + "/100/tasks", headers=recv_json_headers)
     assert r.status_code == 200
 
 
-# The tests fails with xml body
+# NOTE: The tests fails with xml body
 def test_post_project_id(app):
     r = requests.post(url_project + "/1", headers=recv_xml_headers, json=project_create_xml)
     assert r.status_code == 400 and "java.lang.IllegalStateException" in r.text
@@ -160,14 +163,14 @@ def test_post_project(app):
     assert resp.status_code == 400 and "java.lang.IllegalStateException" in resp.text
 
 
-# Create connection from task to category, but only shows up in 1 direction
+# NOTE: Create connection from task to category, but only shows up in 1 direction
 def test_connect_categories_tasks(app):
     r = requests.post(url_todo + "/2/categories", headers=recv_json_headers, json=category_connect_todo)
     r2 = requests.get(url_todo + "/2/categories", headers=recv_json_headers)
     r3 = requests.get(url_category + "/1/todos", headers=recv_json_headers)
     assert r2.status_code == 200 and len(r2.json()['categories']) == 1 and r3.status_code == 200 and len(r3.json()['todos']) == 0
     
-# Create connection from category to task, but only shows up in 1 direction
+# NOTE: Create connection from category to task, but only shows up in 1 direction
 def test_connect_tasks_categories(app):
     r = requests.post(url_category + "/1/todos", headers=recv_json_headers, json=todo_connect_category)
     r2 = requests.get(url_todo + "/2/categories", headers=recv_json_headers)

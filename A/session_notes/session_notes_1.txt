@@ -222,7 +222,8 @@ session findings:
 
 
 Concerns:
-- 
+- the relationship between project and categories is not bidirectional
+- STABILITY concern: anyone can shutdown the app if they have access to the endpoints. there are no validations
 
 Testing ideas: 
 - trying out "" and without "" for tests
