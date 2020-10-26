@@ -1,0 +1,251 @@
+CHARTER
+-----------------------------------------------
+For each capability create a script or small program to demonstrate the capability.
+
+
+BUILD
+-----------------------------------------------
+runTodoManagerRestAPI-1.5.5.jar release version v3
+
+
+AREA
+-----------------------------------------------
+Typical Scenarios - Main functions and capabilites
+
+
+ENVIRONMENT
+-----------------------------------------------
+Windows 10
+Screen resolution: 1920x1080
+
+
+PREPARATION
+-----------------------------------------------
+Run the application and read documentation about REST API http://localhost:4567/docs
+
+
+START
+-----------------------------------------------
+8:30 PM 10/25/2020
+
+
+TESTER
+-----------------------------------------------
+Michael Li (260869379)
+er.li@mail.mcgill.ca
+
+William Zhang (260865382)
+william.zhang2@mail.mcgill.ca
+
+
+TASK BREAKDOWN
+-----------------------------------------------
+CHARTER VS. OPPORTUNITY 90:10
+
+
+TESTING TOOLS USED
+-----------------------------------------------
+Postman (all requests will be sent using Postman)
+
+
+DURATION
+-----------------------------------------------
+45 minutes
+
+
+TEST NOTES
+-----------------------------------------------
+8:31 PM 10/25/2020 Run application using java -jar runTodoManagerRestAPI-1.5.5.jar.
+				   Output: Model todoManager : Number of app versions available (e.g. -version=2, -versionName=profile1) are: 4
+						1 - v0 : prototype
+						2 - v1 : non compressed relationships with guids
+						3 - v2 : compressed relationships with guids
+						4 - v3 : compressed relationships with ids
+						SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+						SLF4J: Defaulting to no-operation (NOP) logger implementation
+						SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+						Using model todoManager
+						Will configure app as release version v3 : compressed relationships with ids 
+				   Running on 4567
+                    e.g. http://localhost:4567
+
+8:32 PM 10/25/2020 Test GET http://localhost:4567/docs 
+        Status: 200
+        Got documentation in html format
+
+8:32 PM 10/25/2020 Test GET http://localhost:4567/categories
+        Status: 200
+        Got 2 categories succesfully
+        Description is empty for both categories but id and title are filled
+
+8:34 PM 10/25/2020 Test GET http://localhost:4567/categories/1
+        Status: 200
+        Got category with id 1
+
+8:35 PM 10/25/2020 Test POST http://localhost:4567/categories with body content type as form-data
+        Status: 415
+        got error:
+        {
+             "errorMessages": [
+        "Unsupported Content Type - multipart/form-data; boundary=--------------------------441577878542657353134351"
+            ]
+        }
+
+8:37 PM 10/25/2020 Test POST http://localhost:4567/categories with json body
+        {
+                title: "Homework"
+        }
+        Status: 201
+        Got newly created category with empty Description
+
+8:39 PM 10/25/2020 Test GET http://localhost:4567/categories
+        Status: 200
+        Get list of all categories as well as the newly created category
+
+8:41 PM 10/25/2020 Test POST http://localhost:4567/projects with json body
+        {
+                "title": "Project A",
+                completed: false,
+                active: true,
+                description: "Project for ECSE429"
+        }
+        Status: 201 
+        Returns the newly created project
+
+8:42 PM 10/25/2020 Test GET http://localhost:4567/projects
+        Status: 200
+        Returns all the 4567/projects
+
+8:44 PM 10/25/2020 Test POST http://localhost:4567/todos with json body
+        {
+                "title": "testing session 1",
+                "doneStatus": false,
+                "description": "testing session 1"
+        }
+        Status: 201
+        Returns the newly created todo
+
+8:45 PM 10/25/2020 Test POST http://localhost:4567/todos with json body
+        {
+                "title": "testing session 2",
+                "doneStatus": false,
+                "description": "testing session 2"
+        }
+        Status: 201
+        Returns the newly created todo
+
+8:47 PM 10/25/2020 Test POST http://localhost:4567/todos/4/categories with json body
+        {
+                id: "3"
+        }
+        Status: 201
+        Returns nothing in body
+
+8:50 PM 10/25/2020 Test GET http://localhost:4567/todos/4
+        Status: 200
+        Returns the todo previously created, but this time it has an extra field, categories
+        "categories": 
+                [
+                        {
+                                "id": "3"
+                        }
+                ]
+
+8:53 PM 10/25/2020 Test POST http://localhost:4567/projects/2/tasks with json body
+        {
+                id: "4"
+        }
+        Status: 201
+        Returns nothing in body
+
+8:55 PM 10/25/2020 Test GET http://localhost:4567/todos/4
+        Status: 200
+        Returns the todo previously created, but this time it has an extra field, taskof
+        "tasksof": 
+                [
+                        {
+                                "id": "2"
+                        }
+                ]
+
+8:57 PM 10/25/2020 Test GET http://localhost:4567/projects/2/tasks
+        Status: 200
+        Returns the project previously created, but this time it has an extra field, tasks
+        "tasks": 
+                [
+                        {
+                                "id": "4"
+                        }
+                ]
+
+9:00 PM 10/25/2020 Test POST http://localhost:4567/categories/3/projects with json body
+        {
+                id: "2"
+        }
+        Status: 201
+        Returns nothing in body
+
+9:02 PM 10/25/2020 Test GET http://localhost:4567/todos
+        Status: 200
+        Returns all todos with todo #4 being linked to a project (#2) and a category (#3)
+
+9:04 PM 10/25/2020 Test GET http://localhost:4567/categories
+        Status: 200
+        Returns all categories with category #3 being related to todo #4 and project #2.
+
+9:06 PM 10/25/2020 Test GET http://localhost:4567/projects
+        Status: 200
+        Returns all projects with project #2 being related to todo #4.
+        In this case, the project does not seem to display the category it is associated to.
+
+9:09 PM 10/25/2020 Test DELETE http://localhost:4567/projects/2
+        Status: 200
+        Returns nothing in body
+
+9:10 PM 10/25/2020 Test GET http://localhost:4567/projects/2
+        Status: 404
+        Returns nothing in body
+
+9:12 PM 10/25/2020 Test GET http://localhost:4567/projects
+        Status: 200
+        The project is deleted
+
+9:13 PM 10/25/2020 Test GET http://localhost:4567/todos
+        Status: 200
+        Returns the todo but it is no longer linked with the project
+
+9:14 PM 10/25/2020 Test DELETE http://localhost:4567/todos/4
+        Status: 200
+        Returns nothing in body
+
+9:15 PM 10/25/2020 Test GET http://localhost:4567/todos/4
+        Status: 404
+        Returns error errorMessages
+        {
+                "errorMessages": 
+                        [
+                                "Could not find an instance with todos/4"
+                        ]
+        }
+
+9:15 PM 10/25/2020 Test GET http://localhost:4567/shutdown
+
+SUMMARY OF SESSION FINDINGS
+-----------------------------------------------
+	- No bugs were found when testing out the capabilities of the system
+        - We were able to find ways to demonstrate the capabilities and relationships that can be formed
+        - These requests were done in postman, however they will be moved to scripts to demonstrate it more effectively
+
+SUMMARY OF CONCERNS IDENTIFIED IN SESSION
+-----------------------------------------------
+The main concern identified is that when a relationship gets created, it simply returns a 201 and nothign in the body.
+This can make it difficult to ensure that the proper relationship has been created.
+Therefore, we always had to do a GET after a POST to ensure that it was succesfully registered.
+
+NEW TESTING IDEAS
+-----------------------------------------------
+	- testing a relationship with one of the two parties not being created
+        - testing what happens if you keep trying to make the same relationship.
+        - testing what happens if you link a task with multiple projects
+        - testing what happens if you link a project with multiple tasks
+        - testing what happens if you link a category with multiple projects or tasks and vice versa

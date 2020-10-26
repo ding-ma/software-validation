@@ -10,8 +10,7 @@ runTodoManagerRestAPI-1.5.5.jar
 
 Area
 -----------------------------------------------
-Typical Scenarios - Main functions and capabilites - Part 2
-
+Typical Scenarios - Main functions and capabilites 
 
 Environment
 -----------------------------------------------
