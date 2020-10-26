@@ -8,9 +8,9 @@ Note: This project requires Python 3.8.
 * `pipenv install` 
 * `pipenv shell`
 
-Run TodoManagerRestAPI server with: `java -jar runTodoManagerRestAPI-1.5.5.jar`
-
 To run the tests, we use: `python run.py`
+
+* Note: this will start the REST API before each test and end it after each test. Please make sure nothing is running on port 4567 before running the above command. 
 
 
 * `docker build --tag todomanager:1.5.5 .`
