@@ -5,6 +5,10 @@ category_create_json = {
     "description": "some description"
 }
 
+category_connect_todo = {
+  "id" : "1"
+}
+
 category_create_xml = """<category>
   <description>t enim ad minim veni</description>
   <title>incididunt ut labora</title>
@@ -16,9 +20,4 @@ category_create_xml_with_id = """<category>
   <description>t enim ad minim veni</description>
   <title>incididunt ut labora</title>
 </category>
-"""
-
-category_connect_task = """<todo>
-  <id>1</id>
-</todo>
 """

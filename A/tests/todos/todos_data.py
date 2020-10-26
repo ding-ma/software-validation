@@ -38,6 +38,10 @@ todo_put_data = {
   "description": "YOLO"
 }
 
+todo_connect_category = {
+  "id" : "2"
+}
+
 #######################
 ###     XML DATA    ###
 #######################

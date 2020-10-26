@@ -5,6 +5,7 @@ import xmltodict
 
 from .headers import *
 from .projects.project_test_data import *
+from .categories.category_test_data import *
 from .todos.todos_data import *
 
 """ This file evaluates any unexpected side effects with all endpoints by testing each endpoint with unexpected data. """
@@ -157,3 +158,19 @@ def test_post_project(app):
     resp = requests.post(url_project, headers=recv_xml_headers, json=project_create_xml)
     print(resp.text, resp.status_code)
     assert resp.status_code == 400 and "java.lang.IllegalStateException" in resp.text
+
+
+# Create connection from task to category, but only shows up in 1 direction
+def test_connect_categories_tasks(app):
+    r = requests.post(url_todo + "/2/categories", headers=recv_json_headers, json=category_connect_todo)
+    r2 = requests.get(url_todo + "/2/categories", headers=recv_json_headers)
+    r3 = requests.get(url_category + "/1/todos", headers=recv_json_headers)
+    assert r2.status_code == 200 and len(r2.json()['categories']) == 1 and r3.status_code == 200 and len(r3.json()['todos']) == 0
+    
+# Create connection from category to task, but only shows up in 1 direction
+def test_connect_tasks_categories(app):
+    r = requests.post(url_category + "/1/todos", headers=recv_json_headers, json=todo_connect_category)
+    r2 = requests.get(url_todo + "/2/categories", headers=recv_json_headers)
+    r3 = requests.get(url_category + "/1/todos", headers=recv_json_headers)
+    assert r2.status_code == 200 and len(r2.json()['categories']) == 0 and r3.status_code == 200 and len(r3.json()['todos']) == 1
+    
