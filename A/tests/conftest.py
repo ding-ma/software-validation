@@ -4,7 +4,7 @@ import pytest
 
 
 @pytest.fixture(scope="session", autouse=True)
-def do_something():
+def set_up_and_tear_down():
     # Set up make sure the app is not running at first
     subprocess.call(['curl', 'http://localhost:4567/shutdown'], shell=True)
     try:
@@ -22,6 +22,7 @@ def do_something():
         pass
     except Exception as e:
         raise e
+
 
 # pytest tests\projects\test_projects_xml.py -s
 @pytest.fixture(scope="function")

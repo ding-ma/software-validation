@@ -10,8 +10,7 @@ runTodoManagerRestAPI-1.5.5.jar
 
 Area
 -----------------------------------------------
-Typical Scenarios - Main functions and capabilites - Part 2
-
+Typical Scenarios - Main functions and capabilites 
 
 Environment
 -----------------------------------------------
@@ -268,14 +267,16 @@ session findings:
 (JSON input), ids needs to be as a string input. This will not work in xml
 
 Concerns:
-- 
+- app data is not persisted which is good for testing but not good for production. 
+if the app crashes, all the user's data is lost
 
 Testing ideas: 
 - trying out "" and without "" for tests
 - test out the null keyword
 - A PDF with the images from the tests is also available
-
-
+- tyring xml with id and "id"
+- testing out negative ids
+- what happens if 2 person sends in requests at the same time? will there be a race condition?
 
 
 
