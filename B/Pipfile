@@ -8,6 +8,9 @@ verify_ssl = true
 [packages]
 behave = "*"
 requests = "*"
+pytest = "*"
+pytest-randomly = "*"
+xmltodict = "*"
 
 [requires]
 python_version = "3.8"
