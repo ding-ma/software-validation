@@ -35,10 +35,8 @@ def step_impl(context):
         category = {
             "id": row["category_id"]
         }
-        # verify that we created a categories relationship with "id" == 1
         modified_todo = requests.get("http://localhost:4567/todos/%d" % int(row["task_id"]) , headers=recv_json_headers)
         modified_todo_json = modified_todo.json()["todos"][0]
-        # print(modified_todo)
         
         assert modified_todo.status_code == 200 and "categories" in modified_todo_json and category in modified_todo_json["categories"]
 
@@ -67,7 +65,6 @@ def step_impl(context):
         task = {
             "id": row["task_id"]
         }
-        # verify that we created a categories relationship with "id" == 1
         modified_category = requests.get("http://localhost:4567/categories/%d" % int(row["category_id"]) , headers=recv_json_headers)
         modified_category_json = modified_category.json()["categories"][0]
         
@@ -83,17 +80,13 @@ def step_impl(context):
             "id": row["category_id"]
         }
         r = requests.post("http://localhost:4567/todos/%d/categories" % int(row["task_id"]), data=json.dumps(category), headers=send_json_recv_json_headers)
-
-        # print(r.status_code)
         assert r.status_code == 404
 
 
 @then(u'the task should not be linked to any category')
 def step_impl(context):
     for row in context.table:
-        # verify that we created a categories relationship with "id" == 1
         modified_todo = requests.get("http://localhost:4567/todos/%d" % int(row["task_id"]) , headers=recv_json_headers)
         modified_todo_json = modified_todo.json()["todos"][0]
 
-        
         assert modified_todo.status_code == 200 and "categories" not in modified_todo_json
