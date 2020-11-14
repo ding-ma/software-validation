@@ -25,7 +25,7 @@ def set_up_and_tear_down():
 @fixture(name="fixture.app")
 def app(context):
     try:
-        process = subprocess.Popen(["java", "-jar", "runTodoManagerRestAPI-1.5.5.jar"], shell=True)
+        process = subprocess.Popen(["java", "-jar", "runTodoManagerRestAPI-1.5.5.jar"], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         status_code = subprocess.call(['curl', 'http://localhost:4567'], shell=True)
 
         while status_code:  # Verify the system is up before starting the test
