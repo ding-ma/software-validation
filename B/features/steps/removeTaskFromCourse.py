@@ -12,7 +12,9 @@ def step_impl(context):
                 # delete this todo
                 deleted_todo = requests.get(url_todo_id % int(todo["id"]), headers=recv_json_headers).json()["todos"][0]
                 r = requests.delete(url_todo_id % int(todo["id"]), headers=send_json_recv_json_headers)
-                assert r.status_code == 200 and deleted_todo not in todos
+                new_todos = requests.get(url_todo).json()["todos"]
+                
+                assert r.status_code == 200 and deleted_todo not in new_todos
 
 @when(u'a user removes a task that does not exist to a course todo list')
 def step_impl(context):

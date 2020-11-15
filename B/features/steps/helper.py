@@ -76,6 +76,7 @@ url_todo_id_categories = "http://localhost:4567/todos/%d/categories"
 url_todo_id_categories_delete = "http://localhost:4567/todos/%d/categories/%d"
 url_category = "http://localhost:4567/categories"
 url_project = "http://localhost:4567/projects"
+url_project_id = "http://localhost:4567/projects/%d"
 
 
 ##########################
@@ -135,3 +136,13 @@ todo_xml_put = """<todo>
   <description>YOLO</description>
   <title>Put change xml</title>
 </todo>"""
+
+##############################
+###     Helper Functions   ###
+##############################
+
+def process_bool(s):
+    if s == "True":
+        return 'true'
+    else:
+        return 'false'
