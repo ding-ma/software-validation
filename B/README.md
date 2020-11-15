@@ -21,6 +21,12 @@ behave --no-capture
 behave --no-capture-stderr
 ```
 
+If you wish to run the test in a random order, you need to run the random_execute file
+
+```
+python random_execute.py
+```
+
 ## Folder Directory
 
 All the `.feature` files will be stored in the `/features` folder. 
