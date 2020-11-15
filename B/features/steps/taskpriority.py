@@ -1,7 +1,6 @@
 import requests
 import subprocess
 import xmltodict
-from behave import use_fixture
 from features.steps.helper import *
 
 
@@ -9,7 +8,6 @@ from features.steps.helper import *
 @given('the following tasks and categories')
 def step_impl(context):
     for row in context.table:
-        requests.post(url_todo, headers=recv_json_headers)
         create_todo = requests.post(url_todo,data=json.dumps({"title": str(row['task_title']), "description": str(row["task_description"]), "doneStatus": bool(row["task_doneStatus"]) } ), headers=send_json_recv_json_headers)
         create_category = requests.post(url_category,data=json.dumps({"title": row['category_title'], "description": row["category_description"]}), headers=send_json_recv_json_headers)
         todo_res = create_todo.json()

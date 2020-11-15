@@ -1,7 +1,6 @@
 import requests
 import subprocess
 import xmltodict
-from behave import use_fixture
 from features.steps.helper import *
 
 

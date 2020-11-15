@@ -74,8 +74,8 @@ url_todo_id_tasksof = "http://localhost:4567/todos/%d/tasksof"
 url_todo_id_tasksof_delete = "http://localhost:4567/todos/%d/tasksof/%d"
 url_todo_id_categories = "http://localhost:4567/todos/%d/categories"
 url_todo_id_categories_delete = "http://localhost:4567/todos/%d/categories/%d"
-
 url_category = "http://localhost:4567/categories"
+url_project = "http://localhost:4567/projects"
 
 
 ##########################

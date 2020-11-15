@@ -1,13 +1,11 @@
 import requests
 import subprocess
 import xmltodict
-from behave import use_fixture
 from features.steps.helper import *
 
 @given(u'the following tasks')
 def step_impl(context):
     for row in context.table:
-        requests.post(url_todo, headers=recv_json_headers)
         create_todo = requests.post(url_todo,data=json.dumps({"title": str(row['task_title']), "description": str(row["task_description"]), "doneStatus": bool(row["task_doneStatus"]) } ), headers=send_json_recv_json_headers)
         todo_res = create_todo.json()
         todos = requests.get(url_todo).json()["todos"]
