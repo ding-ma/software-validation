@@ -25,7 +25,6 @@ def step_impl(context):
 @when(u'a user removes the following course to do list which is nonexistent')
 def step_impl(context):
     projects = requests.get(url_project).json()["projects"]
-    print(projects)
     for row in context.table:
         project = {"id": row["project_id"],
                    "title": row["project_title"],
@@ -54,14 +53,14 @@ def step_impl(context, project_title, project_description, project_completed, pr
     """
     create_project = requests.post(url_project, data=json.dumps(
         {
-            "completed": bool(project_completed),
-            "active": bool(project_active),
+            "completed": to_bool(project_completed),
+            "active": to_bool(project_active),
             "title": project_title,
             "description": project_description
         }), headers=send_json_recv_json_headers)
     project_res = create_project.json()
     projects = requests.get(url_project).json()["projects"]
-    context.project_res = project_res
+    context.project = project_res
     assert create_project.status_code == 201 and project_res in projects
 
 
@@ -72,11 +71,11 @@ def step_impl(context):
     :type context: behave.runner.Context
     """
     projects = requests.get(url_project).json()["projects"]
-    project = {"id": context.project_res["id"],
-               "title": context.project_res["title"],
-               "description": context.project_res["description"],
-               "active": process_bool(context.project_res["active"]),
-               "completed": process_bool(context.project_res["completed"])
+    project = {"id": context.project["id"],
+               "title": context.project["title"],
+               "description": context.project["description"],
+               "active": process_bool(context.project["active"]),
+               "completed": process_bool(context.project["completed"])
                }
 
     deleted_project = requests.get(url_project_id % int(project["id"]), headers=recv_json_headers).json()["projects"][0]
@@ -103,6 +102,7 @@ def step_impl(context):
         )
 
 
+
 @given(
     "an non existing project with title {project_title}, description {project_description}, complete status {project_completed} and active status {project_active}")
 def step_impl(context, project_title, project_description, project_completed, project_active):
@@ -114,7 +114,7 @@ def step_impl(context, project_title, project_description, project_completed, pr
     :type project_active: str
     """
 
-    context.project_res = {
+    context.project = {
         "id": 200,
         "completed": to_bool(project_completed),
         "active": to_bool(project_active),
@@ -131,13 +131,14 @@ def step_impl(context, project_title, project_description, project_completed, pr
         )
 
 
+
 @when("a user removes a non existing project")
 def step_impl(context):
     """
     :type context: behave.runner.Context
     """
     projects = requests.get(url_project).json()["projects"]
-    project = context.project_res
+    project = context.project
 
     # delete this project
     r = requests.delete(url_project_id % int(project["id"]), headers=send_json_recv_json_headers)
