@@ -26,7 +26,10 @@ If you wish to run the test in a random order, you need to run the random_execut
 ```
 python random_execute.py
 ```
-
+If you wish to run the test without starting the server
+```
+python random_execute.py --disable-server
+```
 ## Folder Directory
 
 All the `.feature` files will be stored in the `/features` folder. 
