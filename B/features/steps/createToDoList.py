@@ -53,63 +53,91 @@ def step_impl(context):
         projects = requests.get(url_project).json()["projects"]
         assert create_project.status_code == 400 and 'errorMessages' in project_res
 
-#
-# @given(
-#     u'the a project with title {project_title}, description {project_description}, complete status {project_completed} and active status {project_active}')
-# def step_impl(context, project_title, project_description, project_completed, project_active):
-#     """
-#     :type context: behave.runner.Context
-#     :type project_title: str
-#     :type project_description: str
-#     :type project_completed: str
-#     :type project_active: str
-#     """
-#     create_project = requests.post(url_project, data=json.dumps(
-#         {
-#             "completed": project_completed,
-#             "active": project_active,
-#             "title": project_title,
-#             "description": project_description
-#         }), headers=send_json_recv_json_headers)
-#     project_res = create_project.json()
-#     projects = requests.get(url_project).json()["projects"]
-#     assert create_project.status_code == 201 and project_res in projects
-#
-#
-#
-# @when(
-#     u'a user creates a new project with title "COMP 360", description "Todo list for COMP 360 ", complete status "False", and active status "True"')
-# def step_impl(context):
-#     """
-#     :type context: behave.runner.Context
-#     """
-#     create_project = requests.post(url_project, data=json.dumps(
-#         {
-#             "completed": False,
-#             "active": True,
-#             "title": "COMP 360 ",
-#             "description": "Todo list for COMP 360 "
-#         }), headers=send_json_recv_json_headers)
-#     project_res = create_project.json()
-#     projects = requests.get(url_project).json()["projects"]
-#     assert create_project.status_code == 201 and project_res in projects
-#
-#
-# @then("the projects should contain all of them")
-# def step_impl(context):
-#     """
-#     :type context: behave.runner.Context
-#     """
-#     projects = requests.get(url_project).json()["projects"]
-#     for row in context.table:
-#         # create the project
-#         project = {
-#             "id": row['project_id'],
-#             "title": row['project_title'],
-#             "completed": "true" if row["project_completed"] == "True" else "false",
-#             "active": "true" if row["project_active"] == "True" else "false",
-#             "description": row["project_description"]}
-#         result = [_["id"] == project["id"] and _["title"] == project["title"] and _["description"] == project[
-#             "description"] and _["completed"] == project["completed"] and _["active"] == project["active"] for _ in
-#                   projects]
-#         assert any(result)
+
+@given(
+    u'the a project with title {project_title}, description {project_description}, complete status {project_completed} and active status {project_active}')
+def step_impl(context, project_title, project_description, project_completed, project_active):
+    """
+    :type context: behave.runner.Context
+    :type project_title: str
+    :type project_description: str
+    :type project_completed: str
+    :type project_active: str
+    """
+
+    projects = requests.get(url_project)
+    assert projects.status_code == 200 and project_title not in projects
+    context.projects = projects
+
+
+@when(
+    "a user creates a project with title {project_title}, description {project_description}, complete status {project_completed} and active status {project_active}")
+def step_impl(context, project_title, project_description, project_completed, project_active):
+    """
+    :type context: behave.runner.Context
+    :type project_title: str
+    :type project_description: str
+    :type project_completed: str
+    :type project_active: str
+    """
+    create_project = requests.post(url_project, data=json.dumps(
+        {
+            "completed": bool(project_completed),
+            "active": bool(project_active),
+            "title": project_title,
+            "description": project_description
+        }), headers=send_json_recv_json_headers)
+    project_res = create_project.json()
+    projects = requests.get(url_project).json()["projects"]
+    context.project_res = project_res
+    assert create_project.status_code == 201 and project_res in projects
+
+
+@then(
+    "the projects should a project with title {project_title}, description {project_description}, complete status {project_completed} and active status {project_active}")
+def step_impl(context, project_title, project_description, project_completed, project_active):
+    """
+    :type context: behave.runner.Context
+    :type project_title: str
+    :type project_description: str
+    :type project_completed: str
+    :type project_active: str
+    """
+    projects = requests.get(url_project)
+    assert projects.status_code == 200 and context.project_res in projects.json()['projects']
+
+
+@then(
+    "the projects should not contain a project with title {project_title}, description {project_description}, complete status {project_completed} and active status {project_active}")
+def step_impl(context, project_title, project_description, project_completed, project_active):
+    """
+    :type context: behave.runner.Context
+    :type project_title: str
+    :type project_description: str
+    :type project_completed: str
+    :type project_active: str
+    """
+    projects = requests.get(url_project)
+    assert projects.status_code == 200 and context.project_res not in projects.json()['projects']
+
+
+@when(
+    "a user creates a project without a title, description {project_description}, complete status {project_completed} and active status {project_active}")
+def step_impl(context, project_description, project_completed, project_active):
+    """
+    :type context: behave.runner.Context
+    :type project_description: str
+    :type project_completed: str
+    :type project_active: str
+    """
+    create_project = requests.post(url_project, data=json.dumps(
+        {
+            "id": 1,
+            "completed": bool(project_active),
+            "active": bool(project_completed),
+            "description": project_description
+        }), headers=send_json_recv_json_headers)
+    project_res = create_project.json()
+    projects = requests.get(url_project).json()["projects"]
+    context.project_res = project_res
+    assert create_project.status_code == 400 and 'errorMessages' in project_res

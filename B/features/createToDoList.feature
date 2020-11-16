@@ -2,17 +2,36 @@ Feature: Create a to do list for a new class.
 
   As a student, I create a to do list for a new class I am taking, so I can manage course work.
 
+  # Normal flow
+  Scenario Outline: Create a to do list for a new class
+    Given the a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
+    When a user creates a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
+    Then the projects should a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
+    Examples:
+      | project_title | project_completed | project_active | project_description    |
+      | COMP 360      | False             | True           | Todo list for COMP 360 |
+      | ECSE 429      | False             | True           | ecse 429 stuff         |
 
-#  Scenario Outline: Create a to do list for a new class
-#    Given the a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
-#    When a user creates a new project with title "COMP 360", description "Todo list for COMP 360 ", complete status "False", and active status "True"
-#    Then the projects should contain all of them
-#    Examples:
-#      | project_title | project_completed | project_active | project_description        |
-#      | Office Work   | True              | False          |                            |
-#      | ECSE 429      | False             | True           | Software validation course |
-#      | COMP 360      | False             | True           | Todo list for COMP 360     |
-#
+
+  # Alternate Flow
+  Scenario Outline: Create an inactive and completed to do list for a new class
+    Given the a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
+    When a user creates a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
+    Then the projects should a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
+    Examples:
+      | project_title | project_completed | project_active | project_description |
+      | ECSE 429      | False             | True           | Sofaaaon course     |
+      | COMP 360      | False             | True           | Todss60             |
+
+
+  Scenario Outline:
+    Given the a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
+    When a user creates a project without a title, description <project_description>, complete status <project_completed> and active status <project_active>
+    Then the projects should not contain a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
+    Examples:
+      | project_title | project_completed | project_active | project_description |
+      | ECSE 429      | False             | True           | Sofaaaon course     |
+      | COMP 360      | False             | True           | Todss60             |
 
     # Normal flow
 #  Scenario: Create a to do list for a new class
