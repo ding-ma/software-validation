@@ -12,6 +12,7 @@ def step_impl(context, task_title, task_description, task_doneStatus):
     todos = requests.get(url_todo).json()["todos"]
     context.task_id = todo_res["id"]
     context.task_title = todo_res["title"]
+    context.task = todo_res
     assert create_todo.status_code == 201 and todo_res in todos
 
 
