@@ -21,10 +21,10 @@ Feature: Change task description
         When a user removes the task description
         Then the task description should be empty
         Examples:
-            | task_title  | task_description | task_doneStatus | new_task_description |
-            | write essay | essay #4         | False           |                      |
-            | read paper  | paper #3         | True            |                      |
-            | project 1   | class #4         | False           |                      |
+            | task_title  | task_description | task_doneStatus |
+            | write essay | essay #4         | False           |
+            | read paper  | paper #3         | True            |
+            | project 1   | class #4         | False           |
 
     # Error Flow
     Scenario Outline: Change description of a non-existent task
