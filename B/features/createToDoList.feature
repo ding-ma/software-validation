@@ -26,9 +26,9 @@ Feature: Create a to do list for a new class.
 
   Scenario Outline:
     Given there is not a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
-    When a user creates a project without a title, description <project_description>, complete status <project_completed> and active status <project_active>
+    When a user creates a project with id <id>
     Then the projects should not contain a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
     Examples:
-      | project_title | project_completed | project_active | project_description |
-      | ECSE 429      | False             | True           | Sofaaaon course     |
-      | COMP 360      | False             | True           | Todss60             |
+      | project_title | project_completed | project_active | project_description | id |
+      | ECSE 429      | False             | True           | Sofaaaon course     | 1  |
+      | COMP 360      | False             | True           | Todss60             | 1  |
