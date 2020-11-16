@@ -69,10 +69,6 @@ def step_impl(context, project_title, project_description, project_completed, pr
 def step_impl(context):
     """
     :type context: behave.runner.Context
-    :type project_title: str
-    :type project_description: str
-    :type project_completed: str
-    :type project_active: str
     """
     projects = requests.get(url_project).json()["projects"]
     project = {"id": context.project["id"],
@@ -94,7 +90,17 @@ def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    assert context.project not in context.projects
+    r = requests.get(url_project)
+    projects = r.json()["projects"]
+    deleted_project = context.project_res
+    for project in projects:
+        assert r.status_code == 200 and not (
+                deleted_project['title'] == project["title"] and
+                deleted_project['description'] == project["description"] and
+                to_bool(deleted_project['active']) == json_to_bool(project["active"]) and
+                to_bool(deleted_project['completed']) == json_to_bool(project["completed"])
+        )
+
 
 
 @given(
@@ -110,13 +116,20 @@ def step_impl(context, project_title, project_description, project_completed, pr
 
     context.project = {
         "id": 200,
-        "completed": bool(project_completed),
-        "active": bool(project_active),
+        "completed": to_bool(project_completed),
+        "active": to_bool(project_active),
         "title": project_title,
         "description": project_description
     }
     projects = requests.get(url_project)
-    assert context.project not in projects.json() and projects.status_code == 200
+    for project in projects.json()['projects']:
+        assert projects.status_code == 200 and not (
+                project_title == project["title"] and
+                project_description == project["description"] and
+                to_bool(project_active) == json_to_bool(project["active"]) and
+                to_bool(project_completed) == json_to_bool(project["completed"])
+        )
+
 
 
 @when("a user removes a non existing project")
@@ -151,5 +164,4 @@ def step_impl(context, task_title, task_description, task_doneStatus):
         "active": bool(task_doneStatus)
     }
     todos = requests.get(url_todo)
-
-    assert context.tas not in todos.json() and todos.status_code == 200
+    assert context.task not in todos.json()['todos'] and todos.status_code == 200
