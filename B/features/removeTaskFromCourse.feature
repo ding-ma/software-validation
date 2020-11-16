@@ -4,7 +4,7 @@ Feature: Remove a task to a course to do list
 
     # regular flow
   Scenario Outline: Remove a completed task to the course to do list
-    Given there is not a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
+    Given a user creates a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
     And the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
     When a user removes that task from the course to do list
     Then the task should not be contained
@@ -15,7 +15,7 @@ Feature: Remove a task to a course to do list
 
     # alternate flow
   Scenario Outline: Remove an uncompleted task to the course to do list
-    Given there is not a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
+    Given a user creates a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
     And the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
     When a user removes that task from the course to do list
     Then the task should not be contained
@@ -26,7 +26,7 @@ Feature: Remove a task to a course to do list
 
     # error flow
   Scenario Outline: Remove an non existing task to the course todo list
-    Given there is not a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
+    Given a user creates a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
     And the a non existing task with title <task_title>, description <task_description> and done status <task_doneStatus>
     When a user removes that non existing task from the course to do list
     Then the task should not be contained
