@@ -5,65 +5,40 @@ Feature: Prioritize Tasks
     so I can better manage my time.
 
     # Normal Flow
-    Scenario: Link a task to a category
-    Given the following tasks and categories
-        | task_id   | task_title  | task_description | task_doneStatus | category_id | category_title| category_description |
-        | 3         | write essay | essay #4         | False           | 3           | LOW           | low priority         |
-        | 4         | read paper  | paper #3         | True            | 4           | MEDIUM        | medium priority      |
-        | 5         | project 1   | class #4         | False           | 5           | HIGH          | high priority        |
-    When a user links a category to the given tasks
-        | task_id   | category_id |
-        | 3         | 3           |
-        | 4         | 4           |
-        | 5         | 5           |
-    Then the task should be properly linked with the category
-        | task_id   | category_id |
-        | 3         | 3           |
-        | 4         | 4           |
-        | 5         | 5           |
-    And the category should not be linked to any task
-        | category_id |
-        | 3           |
-        | 4           |
-        | 5           |
+    Scenario Outline: Link a task to a category
+        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        And the category with title <category_title> and description <category_description>
+        When a user links a task to a category
+        Then the task should be linked to the category
+        And the category should not be linked to the task
+        Examples:
+            | task_title  | task_description | task_doneStatus | category_title| category_description |
+            | write essay | essay #4         | False           | LOW           | low priority         |
+            | read paper  | paper #3         | True            | MEDIUM        | medium priority      |
+            | project 1   | class #4         | False           | HIGH          | high priority        |  
 
     # Alternative Flow
-    Scenario: Link a category to a task
-    Given the following tasks and categories
-        | task_id   | task_title  | task_description | task_doneStatus | category_id | category_title| category_description |
-        | 3         | write essay | essay #4         | False           | 3           | LOW           | low priority         |
-        | 4         | read paper  | paper #3         | True            | 4           | MEDIUM        | medium priority      |
-        | 5         | project 1   | class #4         | False           | 5           | HIGH          | high priority        |
-    When a user links a task to the given category
-        | category_id | task_id   |
-        | 3           | 3         |
-        | 4           | 4         |
-        | 5           | 5         |
-    Then the category should be properly linked to the task
-        | category_id | task_id   |
-        | 3           | 3         |
-        | 4           | 4         |
-        | 5           | 5         |
-    And the task should not be linked to any category
-        | task_id   |
-        | 3         |
-        | 4         |
-        | 5         |
+    Scenario Outline: Link a category to a task
+        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        And the category with title <category_title> and description <category_description>
+        When a user links the category to the given task
+        Then the category should be linked to the task
+        And the task should not be linked to the category
+        Examples:
+            | task_title  | task_description | task_doneStatus | category_title| category_description |
+            | write essay | essay #4         | False           | LOW           | low priority         |
+            | read paper  | paper #3         | True            | MEDIUM        | medium priority      |
+            | project 1   | class #4         | False           | HIGH          | high priority        |  
 
     # Error Flow
-    Scenario: Prioritize a task to category
-    Given the following tasks and categories
-        | task_id   | task_title  | task_description | task_doneStatus | category_id | category_title| category_description |
-        | 3         | write essay | essay #4         | False           | 3           | LOW           | low priority         |
-        | 4         | read paper  | paper #3         | True            | 4           | MEDIUM        | medium priority      |
-        | 5         | project 1   | class #4         | False           | 5           | HIGH          | high priority        |
-    When a user links an invalid category to the given tasks
-        | task_id   | category_id |
-        | 3         | 6           |
-        | 4         | 7           |
-        | 5         | 8           |
-    Then the task should not be linked to any category
-        | task_id   |
-        | 3         |
-        | 4         |
-        | 5         |
+    Scenario Outline: Prioritize a task to category
+        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        And the category with title <category_title> and description <category_description>
+        When a user links an invalid category with <wrong_category_id> to the given task
+        Then the task should not be linked to the category
+        And the category should not be linked to the task
+        Examples:
+            | task_title  | task_description | task_doneStatus | category_title| category_description | wrong_category_id |
+            | write essay | essay #4         | False           | LOW           | low priority         | -1                |
+            | read paper  | paper #3         | True            | MEDIUM        | medium priority      | 0                |
+            | project 1   | class #4         | False           | HIGH          | high priority        | -999             |

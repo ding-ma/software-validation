@@ -5,50 +5,35 @@ Feature: Change task description
     to better represent the work to do.
 
     # Normal Flow
-    Scenario: Change task description
-    Given the following tasks
-        | task_id   | task_title  | task_description | task_doneStatus | 
-        | 3         | write essay | essay #4         | False           |
-        | 4         | read paper  | paper #3         | True            |
-        | 5         | project 1   | class #4         | False           |
-    When a user changes the description of the following tasks
-        | task_id   | task_title  | task_description |
-        | 3         | write essay | new essay #4     |
-        | 4         | read paper  | old paper #3     |
-        | 5         | project 1   | cool class #4    |
-    Then the task descriptions should be changed
-        | task_id   | task_description |
-        | 3         | new essay #4     |
-        | 4         | old paper #3     |
-        | 5         | cool class #4    |
+    Scenario Outline: Change task description
+        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        When a user changes the description to <new_task_description>
+        Then the task description should be changed
+        Examples:
+            | task_title  | task_description | task_doneStatus | new_task_description |
+            | write essay | essay #4         | False           | new essay #4         |
+            | read paper  | paper #3         | True            | old paper #3         |
+            | project 1   | class #4         | False           | cool class #4        |
 
     # Alternative Flow
-    Scenario: Remove task description
-    Given the following tasks
-        | task_id   | task_title  | task_description | task_doneStatus | 
-        | 3         | write essay | essay #4         | True            |
-        | 4         | read paper  | paper #3         | True            |
-        | 5         | project 1   | class #4         | False           |
-    When a user removes the description of the following tasks
-        | task_id   | task_title  |
-        | 3         | write essay |
-        | 4         | read paper  |
-        | 5         | project 1   |
-    Then the task descriptions should be changed
-        | task_id   | task_title  | task_description |
-        | 3         | write essay |                  |
-        | 4         | read paper  |                  |
-        | 5         | project 1   |                  |
+    Scenario Outline: Remove task description
+        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        When a user removes the task description
+        Then the task description should be empty
+        Examples:
+            | task_title  | task_description | task_doneStatus | new_task_description |
+            | write essay | essay #4         | False           |                      |
+            | read paper  | paper #3         | True            |                      |
+            | project 1   | class #4         | False           |                      |
 
     # Error Flow
-    Scenario: Change description of a non-existent task
-    Given the following tasks
-        | task_id   | task_title  | task_description | task_doneStatus | 
-        | 3         | write essay | essay #4         | False           |
-        | 4         | read paper  | paper #3         | True            |
-        | 5         | project 1   | class #4         | False           |
-    When a user changes the description of a non-existent task
-        | task_id   | task_title  | task_description |
-        | 10        | DNE         | new_description  |
-        | 11        | NA          | nice description |
-    Then nothing should happen
+    Scenario Outline: Change description of a non-existent task
+        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        When a user selects the <wrong_task_id> to change the description to <new_task_description>
+        Then there should be a not found error
+        Examples:
+            | task_title  | task_description | task_doneStatus | new_task_description | wrong_task_id |
+            | write essay | essay #4         | False           | wrong                | -1            |
+            | read paper  | paper #3         | True            | ok                   | 0             |
+            | project 1   | class #4         | False           | test                 | -99           |
+

@@ -1,44 +1,45 @@
 import requests
 import subprocess
-import xmltodict
 from features.steps.helper import *
 
+@when(u'a user changes the description to {new_task_description}')
+def step_impl(context, new_task_description):
+    task_update = {
+        "title": context.task_title,
+        "description": new_task_description
+    }
+    context.new_task_description = new_task_description
+    r = requests.put(url_todo_id % int(context.task_id),data=json.dumps(task_update), headers=send_json_recv_json_headers)
+    assert r.status_code == 200
 
-@when(u'a user changes the description of the following tasks')
+@when(u'a user removes the task description')
 def step_impl(context):
-    for row in context.table:
-        task_update = {
-            "title": row["task_title"],
-            "description": row["task_description"]
-        }
-        r = requests.put(url_todo_id % int(row["task_id"]),data=json.dumps(task_update), headers=send_json_recv_json_headers)
-        assert r.status_code == 200
+    task_update = {
+        "title": context.task_title,
+        "description": ""
+    }
+    context.new_task_description = ""
+    r = requests.put(url_todo_id % int(context.task_id),data=json.dumps(task_update), headers=send_json_recv_json_headers)
+    assert r.status_code == 200
 
-
-@then(u'the task descriptions should be changed')
+@then(u'the task description should be changed')
 def step_impl(context):
-    for row in context.table:
-        r = requests.get(url_todo_id % int(row["task_id"]), headers=recv_json_headers)
-        todo = r.json()["todos"][0]
-        assert r.status_code == 200 and str(row["task_description"]) == str(todo["description"])
+    r = requests.get(url_todo_id % int(context.task_id), headers=recv_json_headers)
+    todo = r.json()["todos"][0]
+    assert r.status_code == 200 and str(context.new_task_description) == str(todo["description"])
 
-
-@when(u'a user removes the description of the following tasks')
+@then(u'the task description should be empty')
 def step_impl(context):
-    for row in context.table:
-        task_update = {
-            "title": row["task_title"],
-            "description": ""
-        }
-        r = requests.put(url_todo_id % int(row["task_id"]),data=json.dumps(task_update), headers=send_json_recv_json_headers)
-        assert r.status_code == 200
+    r = requests.get(url_todo_id % int(context.task_id), headers=recv_json_headers)
+    todo = r.json()["todos"][0]
+    assert r.status_code == 200 and str(context.new_task_description) == str(todo["description"])
 
+@when(u'a user selects the {wrong_task_id} to change the description to {new_task_description}')
+def step_impl(context, wrong_task_id, new_task_description):
+    task_update = {
+        "description": new_task_description
+    }
+    r = requests.put(url_todo_id % int(wrong_task_id),data=json.dumps(task_update), headers=send_json_recv_json_headers)
+    context.r = r
+    assert r.status_code == 404
 
-@when(u'a user changes the description of a non-existent task')
-def step_impl(context):
-    for row in context.table:
-        task_update = {
-           "description": row["task_description"]
-        }
-        r = requests.put(url_todo_id % int(row["task_id"]),data=json.dumps(task_update), headers=send_json_recv_json_headers)
-        assert r.status_code == 404
