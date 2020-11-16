@@ -92,7 +92,7 @@ def step_impl(context):
     """
     r = requests.get(url_project)
     projects = r.json()["projects"]
-    deleted_project = context.project_res
+    deleted_project = context.project
     for project in projects:
         assert r.status_code == 200 and not (
                 deleted_project['title'] == project["title"] and
