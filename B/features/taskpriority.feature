@@ -6,7 +6,7 @@ Feature: Prioritize Tasks
 
     # Normal Flow
     Scenario Outline: Link a task to a category
-        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        Given a task with title <task_title>, description <task_description> and done status <task_doneStatus>
         And the category with title <category_title> and description <category_description>
         When a user links a task to a category
         Then the task should be linked to the category
@@ -19,7 +19,7 @@ Feature: Prioritize Tasks
 
     # Alternative Flow
     Scenario Outline: Link a category to a task
-        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        Given a task with title <task_title>, description <task_description> and done status <task_doneStatus>
         And the category with title <category_title> and description <category_description>
         When a user links the category to the given task
         Then the category should be linked to the task
@@ -32,7 +32,7 @@ Feature: Prioritize Tasks
 
     # Error Flow
     Scenario Outline: Prioritize a task to category
-        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        Given a task with title <task_title>, description <task_description> and done status <task_doneStatus>
         And the category with title <category_title> and description <category_description>
         When a user links an invalid category with <wrong_category_id> to the given task
         Then the task should not be linked to the category

@@ -6,7 +6,7 @@ Feature: Change task done status
 
     # Normal Flow
     Scenario Outline: Mark a task as done
-        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        Given a task with title <task_title>, description <task_description> and done status <task_doneStatus>
         When a user marks the task <task_title> as done
         Then the task should have a a doneStatus of <final_task_doneStatus>
         Examples:
@@ -16,7 +16,7 @@ Feature: Change task done status
             | project 1   | class #4         | False           | True                  |
     # Alternative Flow
     Scenario Outline: Mark a task as not done
-        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        Given a task with title <task_title>, description <task_description> and done status <task_doneStatus>
         When a user marks the task <task_title> as not done
         Then the task should have a a doneStatus of <final_task_doneStatus>
         Examples:
@@ -27,7 +27,7 @@ Feature: Change task done status
 
     # Error Flow
     Scenario Outline: Mark a non-exitent task as done
-        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        Given a task with title <task_title>, description <task_description> and done status <task_doneStatus>
         When a user marks the wrong task <wrong_task_id> as done
         Then there should be a not found error
         Examples:

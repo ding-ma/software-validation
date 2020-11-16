@@ -3,6 +3,7 @@ from behave import *
 
 from features.steps.helper import *
 
+@given(u'a user adds a task with title {task_title}, description {task_description} and done status {task_doneStatus} to the project')
 @when(u'a user adds a task with title {task_title}, description {task_description} and done status {task_doneStatus} to the project')
 def step_impl(context,task_title, task_description, task_doneStatus):
     """
