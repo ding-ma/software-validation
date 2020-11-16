@@ -146,3 +146,15 @@ def process_bool(s):
         return 'true'
     else:
         return 'false'
+
+def to_bool(s):
+    if s == "True":
+        return True
+    else:
+        return False
+        
+def json_to_bool(s):
+    if s == "true":
+        return True
+    else:
+        return False

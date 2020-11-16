@@ -14,16 +14,16 @@ def step_impl(context, project_title, project_description, project_completed, pr
     :type project_completed: str
     :type project_active: str
     """
-    create_project = requests.post(url_project, data=json.dumps(
-        {
-            "completed": bool(project_completed),
-            "active": bool(project_active),
+    project =  {
+            "completed": to_bool(project_completed),
+            "active": to_bool(project_active),
             "title": project_title,
             "description": project_description
-        }), headers=send_json_recv_json_headers)
+        }
+    create_project = requests.post(url_project, data=json.dumps(project), headers=send_json_recv_json_headers)
     project_res = create_project.json()
     projects = requests.get(url_project).json()["projects"]
-    context.project_res = project_res
+    context.projects = projects
     assert create_project.status_code == 201 and project_res in projects
 
 
@@ -37,8 +37,10 @@ def step_impl(context, project_title, project_description, project_completed, pr
     :type project_completed: str
     :type project_active: str
     """
-    projects = requests.get(url_project)
-    assert projects.status_code == 200 and context.project_res in projects.json()['projects']
+    r = requests.get(url_project)
+    projects = r.json()["projects"]
+    compare = [True if project_title == project["title"] and project_description == project["description"] and to_bool(project_active) == json_to_bool(project["active"]) and to_bool(project_completed) == json_to_bool(project["completed"]) else False for project in projects]
+    assert r.status_code == 200 and any(compare)
 
 
 @then(
@@ -51,8 +53,10 @@ def step_impl(context, project_title, project_description, project_completed, pr
     :type project_completed: str
     :type project_active: str
     """
-    projects = requests.get(url_project)
-    assert projects.status_code == 200 and context.project_res not in projects.json()['projects']
+    r = requests.get(url_project)
+    projects = r.json()["projects"]
+    for project in projects:
+        assert r.status_code == 200 and not (project_title == project["title"] and project_description == project["description"] and to_bool(project_active) == json_to_bool(project["active"]) and to_bool(project_completed) == json_to_bool(project["completed"]))
 
 
 @given(
@@ -65,12 +69,14 @@ def step_impl(context, project_title, project_description, project_completed, pr
     :type project_completed: str
     :type project_active: str
     """
-    projects = requests.get(url_project)
-    assert projects.status_code == 200 and project_title not in projects
+    r = requests.get(url_project)
+    projects = r.json()["projects"]
     context.projects = projects
+    for project in projects:
+        assert r.status_code == 200 and not (project_title == project["title"] and project_description == project["description"] and to_bool(project_active) == json_to_bool(project["active"]) and to_bool(project_completed) == json_to_bool(project["completed"]))
 
 
-@when("a user creates a project with id{id}")
+@when("a user creates a project with id {id}")
 def step_impl(context, id):
     """
     :type context: behave.runner.Context
@@ -82,6 +88,4 @@ def step_impl(context, id):
 
         }), headers=send_json_recv_json_headers)
     project_res = create_project.json()
-    projects = requests.get(url_project).json()["projects"]
-    context.project_res = project_res
     assert create_project.status_code == 400 and 'errorMessages' in project_res

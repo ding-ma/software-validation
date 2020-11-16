@@ -15,7 +15,7 @@ Feature: Create a to do list for a new class.
 
   # Alternate Flow
   Scenario Outline: Create an inactive and completed to do list for a new class
-    Given  there is not a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
+    Given there is not a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
     When a user creates a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
     Then the projects should contain a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
     Examples:
@@ -24,7 +24,7 @@ Feature: Create a to do list for a new class.
       | COMP 360      | True             | False           | Todss60             |
 
 
-  Scenario Outline:
+  Scenario Outline: Create a to do list for a new class with an id
     Given there is not a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
     When a user creates a project with id <id>
     Then the projects should not contain a project with title <project_title>, description <project_description>, complete status <project_completed> and active status <project_active>
