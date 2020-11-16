@@ -3,7 +3,9 @@ from behave import *
 
 from features.steps.helper import *
 
-
+@given(
+    "a user creates a project with title {project_title}, description {project_description}, complete status {project_completed} and active status {project_active}"
+)
 @when(
     "a user creates a project with title {project_title}, description {project_description}, complete status {project_completed} and active status {project_active}")
 def step_impl(context, project_title, project_description, project_completed, project_active):
