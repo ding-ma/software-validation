@@ -6,7 +6,7 @@ Feature: Change task description
 
     # Normal Flow
     Scenario Outline: Change task description
-        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        Given a task with title <task_title>, description <task_description> and done status <task_doneStatus>
         When a user changes the description to <new_task_description>
         Then the task description should be changed
         Examples:
@@ -17,7 +17,7 @@ Feature: Change task description
 
     # Alternative Flow
     Scenario Outline: Remove task description
-        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        Given a task with title <task_title>, description <task_description> and done status <task_doneStatus>
         When a user removes the task description
         Then the task description should be empty
         Examples:
@@ -28,7 +28,7 @@ Feature: Change task description
 
     # Error Flow
     Scenario Outline: Change description of a non-existent task
-        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        Given a task with title <task_title>, description <task_description> and done status <task_doneStatus>
         When a user selects the <wrong_task_id> to change the description to <new_task_description>
         Then there should be a not found error
         Examples:

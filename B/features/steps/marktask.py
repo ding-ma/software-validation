@@ -5,7 +5,7 @@ from behave import *
 
 from features.steps.helper import *
 
-@given(u'the a task with title {task_title}, description {task_description} and done status {task_doneStatus}')
+@given(u'a task with title {task_title}, description {task_description} and done status {task_doneStatus}')
 def step_impl(context, task_title, task_description, task_doneStatus):
     create_todo = requests.post(url_todo,data=json.dumps({"title": str(task_title), "description": str(task_description), "doneStatus": bool(task_doneStatus) } ), headers=send_json_recv_json_headers)
     todo_res = create_todo.json()
