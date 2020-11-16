@@ -21,7 +21,7 @@ Feature: Remove a task to a course to do list
     Then the task should not be contained
     Examples:
       | project_title | project_completed | project_active | project_description        | task_title  | task_description | task_doneStatus |
-      | ECSE 429      | True              | False          | Software validation course | write paper | miam             | True            |
+      | ECSE 429      | False              | True          | Software validation course | write paper | miam             | False            |
       | COMP 429      | False             | True           | pire cours                 | some title  | desct?           | False           |
 
     # error flow
