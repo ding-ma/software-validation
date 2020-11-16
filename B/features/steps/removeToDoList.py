@@ -38,31 +38,92 @@ def step_impl(context):
 
 
 @given(
-    "the a project with title {project_title}, description {project_description},project status {project_status} and done status {project_completed}")
-def step_impl(context, project_title, project_description, project_status, project_completed):
+    "an existing project with title {project_title}, description {project_description}, complete status {project_completed} and active status {project_active}")
+def step_impl(context, project_title, project_description, project_completed, project_active):
     """
     :type context: behave.runner.Context
     :type project_title: str
     :type project_description: str
-    :type project_status: str
     :type project_completed: str
+    :type project_active: str
     """
-    raise NotImplementedError(
-        u'STEP: Given the a project with title <project_title>, description <project_description>,project status <project_status> and done status <project_completed>')
+    create_project = requests.post(url_project, data=json.dumps(
+        {
+            "completed": bool(project_completed),
+            "active": bool(project_active),
+            "title": project_title,
+            "description": project_description
+        }), headers=send_json_recv_json_headers)
+    project_res = create_project.json()
+    projects = requests.get(url_project).json()["projects"]
+    context.project_res = project_res
+    assert create_project.status_code == 201 and project_res in projects
 
 
-@when('a user removes "ECSE 429" from the projects')
+@when(
+    "a user removes that project")
+def step_impl(context):
+    """
+    :type context: behave.runner.Context
+    :type project_title: str
+    :type project_description: str
+    :type project_completed: str
+    :type project_active: str
+    """
+    projects = requests.get(url_project).json()["projects"]
+    project = {"id":context.project_res["id"],
+               "title": context.project_res["title"],
+               "description": context.project_res["description"],
+               "active": process_bool(context.project_res["active"]),
+               "completed": process_bool(context.project_res["completed"])
+               }
+
+    deleted_project = requests.get(url_project_id % int(project["id"]), headers=recv_json_headers).json()["projects"][0]
+    r = requests.delete(url_project_id % int(project["id"]), headers=send_json_recv_json_headers)
+    new_projects = requests.get(url_project).json()["projects"]
+    context.projects = new_projects
+    assert r.status_code == 200 and deleted_project not in new_projects and len(new_projects) == len(projects) - 1
+
+
+@then("the projects should not be contained")
 def step_impl(context):
     """
     :type context: behave.runner.Context
     """
-    raise NotImplementedError(u'STEP: When a user removes "ECSE 429" from the projects')
+    assert context.project_res not in context.projects
 
 
-@then("the projects should contain {isContained}")
-def step_impl(context, isContained):
+@given(
+    "an non existing project with title {project_title}, description {project_description}, complete status {project_completed} and active status {project_active}")
+def step_impl(context, project_title, project_description, project_completed, project_active):
     """
     :type context: behave.runner.Context
-    :type isContained: str
+    :type project_title: str
+    :type project_description: str
+    :type project_completed: str
+    :type project_active: str
     """
-    raise NotImplementedError(u'STEP: Then the projects should contain <isContained>')
+
+    context.project_res = {
+        "id": 200,
+        "completed": bool(project_completed),
+        "active": bool(project_active),
+        "title": project_title,
+        "description": project_description
+    }
+    assert True
+
+
+@when("a user removes a non existing project")
+def step_impl(context):
+    """
+    :type context: behave.runner.Context
+    """
+    projects = requests.get(url_project).json()["projects"]
+    project = context.project_res
+
+    # delete this project
+    r = requests.delete(url_project_id % int(project["id"]), headers=send_json_recv_json_headers)
+    new_projects = requests.get(url_project).json()["projects"] # validate that there was no side effects and it didn't change the existing projects.
+    context.projects = new_projects
+    assert project not in projects and r.status_code == 404 and len(new_projects) == len(projects)
