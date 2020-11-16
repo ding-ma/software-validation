@@ -1,6 +1,8 @@
 import requests
 import subprocess
 import xmltodict
+from behave import *
+
 from features.steps.helper import *
 
 @given(u'the category with title {category_title} and description {category_description}')
