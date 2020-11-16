@@ -61,6 +61,5 @@ def step_impl(context,task_title, task_description, task_doneStatus):
 
 @then(u'we should receive an error message')
 def step_impl(context):
-    print(context.error_request)
     assert 'errorMessages' in context.error_request
 
