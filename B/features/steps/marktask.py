@@ -52,5 +52,4 @@ def step_impl(context, wrong_task_id):
 
 @then(u'there should be a not found error')
 def step_impl(context):
-    # print(context.r.status_code)
     assert context.r.status_code == 404
