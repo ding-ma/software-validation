@@ -31,8 +31,8 @@ Feature: Query incomplete tasks for class
     # Error Flow
     Scenario Outline: No doneStatus filter used for class
         Given a task with description <task_description>, task <task_title>, and done status <task_doneStatus> linked to project with title <project_title>, done status <project_completed>, active status <project_active> and description <project_description>
-        And a complete task with title <task_title>, description <task_description>
-        Then tasks for category should be returned
+        And a complete task with title <task_title>, description <task_description> linked to project
+        Then tasks for class should be returned
         Examples:
             | task_title  | task_description | task_doneStatus | category_title| category_description | task_notDoneStatus |
             | write essay | essay #4         | False           | HIGH          | high priority         | TRUE               |

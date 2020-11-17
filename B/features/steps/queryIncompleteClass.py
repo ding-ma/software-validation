@@ -5,7 +5,7 @@ from behave import *
 
 from features.steps.helper import *
 
-@given(u'a task with description {task_description}, task {task_title},  and done status {task_doneStatus} linked to project with title {project_title}, done status {project_completed}, active status {project_active} and description {project_description}')
+@given(u'a task with description {task_description}, task {task_title}, and done status {task_doneStatus} linked to project with title {project_title}, done status {project_completed}, active status {project_active} and description {project_description}')
 def step_impl(context, task_title, task_description, task_doneStatus, project_title, project_completed, project_active, project_description):
         # Create task
         doneStatus = True
@@ -17,21 +17,19 @@ def step_impl(context, task_title, task_description, task_doneStatus, project_ti
         context.task_id = todo_res["id"]
         context.task_title = todo_res["title"]
         context.task = todo_res
-        assert create_todo.status_code == 201 and todo_res in todos
         
         # Create old project
         create_project = requests.post(url_project,data=json.dumps({"title": str(project_title), "description": str(project_description)}), headers=send_json_recv_json_headers)
         project_res = create_project.json()
         projects = requests.get(url_project).json()["projects"]
         context.old_project_id = project_res["id"]
-        assert create_project.status_code == 201 and project_res in projects
 
         # Link them
         task = {
             "id": context.task_id
         }
         r = requests.post("http://localhost:4567/projects/%d/tasks" % int(context.old_project_id), data=json.dumps(task), headers=send_json_recv_json_headers)
-        assert r.status_code == 201
+        assert create_todo.status_code == 201 and todo_res in todos and create_project.status_code == 201 and project_res in projects and r.status_code == 201
 
 @given(u'a complete task with title {task_title}, description {task_description} linked to project')
 def step_impl(context, task_title, task_description):

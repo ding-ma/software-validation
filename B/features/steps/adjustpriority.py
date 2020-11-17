@@ -16,21 +16,19 @@ def step_impl(context, task_title, task_description, task_doneStatus, category_t
         context.task_id = todo_res["id"]
         context.task_title = todo_res["title"]
         context.task = todo_res
-        assert create_todo.status_code == 201 and todo_res in todos
         
         # Create old category
         create_category = requests.post(url_category,data=json.dumps({"title": str(category_title), "description": str(category_description)}), headers=send_json_recv_json_headers)
         category_res = create_category.json()
         categories = requests.get(url_category).json()["categories"]
         context.old_category_id = category_res["id"]
-        assert create_category.status_code == 201 and category_res in categories
 
         # Link them
         task = {
             "id": context.task_id
         }
         r = requests.post("http://localhost:4567/categories/%d/todos" % int(context.old_category_id), data=json.dumps(task), headers=send_json_recv_json_headers)
-        assert r.status_code == 201
+        assert create_todo.status_code == 201 and todo_res in todos and create_category.status_code == 201 and category_res in categories and r.status_code == 201
 
 @when(u'a user unlinks a task from old category')
 def step_impl(context):

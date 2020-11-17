@@ -14,14 +14,13 @@ def step_impl(context, task_title, task_description):
     context.complete_task_id = todo_res["id"]
     context.complete_task_title = todo_res["title"]
     context.complete_task = todo_res
-    assert create_todo.status_code == 201 and todo_res in todos
 
     # Link to category
     task = {
         "id": context.complete_task_id
     }
     r = requests.post("http://localhost:4567/categories/%d/todos" % int(context.old_category_id), data=json.dumps(task), headers=send_json_recv_json_headers)
-    assert r.status_code == 201
+    assert create_todo.status_code == 201 and todo_res in todos and r.status_code == 201
 
 
 @then(u'only incomplete task for category should be returned')

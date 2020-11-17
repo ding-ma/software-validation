@@ -36,7 +36,7 @@ Feature: Adjust Task Priority
 
     # Error Flow
     Scenario Outline: Change priority with no initial priority
-        Given the a task with title <task_title>, description <task_description> and done status <task_doneStatus>
+        Given a task with title <task_title>, description <task_description> and done status <task_doneStatus> linked to category with title <category_title> and description <category_description>
         And the category with title <category_title> and description <category_description>
         Then the category should not be able to be unlinked
         Examples:
