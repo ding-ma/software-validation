@@ -4,6 +4,7 @@ from ..headers import *
 import requests
 import json
 from .todos_data import *
+from ..test_fixture import start_server,shutdown_server
 
 
 def create_to_do(run_id):
@@ -21,10 +22,12 @@ def assert_todos(run_id):
 
 
 @pytest.mark.monitor_test
-def test_add_10_todo_t1(app):
+def test_add_10_todo_t1():
+    p = start_server()
     for i in range(10):
         create_to_do(str(i))
         assert_todos(str(i))
+    shutdown_server(p)
 
 
 @pytest.mark.monitor_test
@@ -34,10 +37,12 @@ def test_add_10_todo_t2(app):
 
 
 @pytest.mark.monitor_test
-def test_add_100_todo_t1(app):
+def test_add_100_todo_t1():
+    p = start_server()
     for i in range(100):
         create_to_do(str(i))
         assert_todos(str(i))
+    shutdown_server(p)
 
 
 @pytest.mark.monitor_test
@@ -47,10 +52,12 @@ def test_add_100_todo_t2(app):
 
 
 @pytest.mark.monitor_test
-def test_add_1000_todo_t1(app):
+def test_add_1000_todo_t1():
+    p = start_server()
     for i in range(1000):
         create_to_do(str(i))
         assert_todos(str(i))
+    shutdown_server(p)
 
 
 @pytest.mark.monitor_test
