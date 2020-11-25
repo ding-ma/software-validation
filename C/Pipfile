@@ -13,6 +13,7 @@ xmltodict = "*"
 psutil = "*"
 memory_profiler = "*"
 pytest-monitor = "*"
+pytest-randomly = "*"
 
 [requires]
 python_version = "3.8"

@@ -15,54 +15,7 @@ url_todo_id_categories_delete = "http://localhost:4567/todos/%d/categories/%d"
 
 # post data
 todo_data = {
-  "title": "bore et dolore magna",
+  "title": "",
   "doneStatus": False,
-  "description": "it amet, consectetur"
+  "description": ""
 }
-
-todo_data2 = {
-  "title": "New todo",
-  "doneStatus": False,
-  "description": "For testing"
-}
-
-todo_data3 = {
-  "title": "New todo for category",
-  "doneStatus": False,
-  "description": "For test"
-}
-
-todo_put_data = {
-  "title": "Put change",
-  "doneStatus": True,
-  "description": "YOLO"
-}
-
-todo_connect_category = {
-  "id" : "2"
-}
-
-#######################
-###     XML DATA    ###
-#######################
-
-todo_xml = """<todo>
-  <doneStatus>true</doneStatus>
-  <description>it amet, asdasdconsectetur</description>
-  <title>bore et dolore magna</title>
-</todo>"""
-todo_xml2 = """<todo>
-  <doneStatus>true</doneStatus>
-  <description>For /todos/:id/sdfgsd xml</description>
-  <title>newtodo xml</title>
-</todo>"""
-todo_xml3 = """<todo>
-  <doneStatus>false</doneStatus>
-  <description>for /todos/:id/sdfg xml</description>
-  <title>New todo for category xml</title>
-</todo>"""
-todo_xml_put = """<todo>
-  <doneStatus>false</doneStatus>
-  <description>YOLO</description>
-  <title>Put change xml</title>
-</todo>"""
