@@ -22,45 +22,180 @@ def assert_todos(run_id):
 
 
 @pytest.mark.monitor_test
-def test_add_10_todo_t1():
+def test_add_1_todo_t1():
     p = start_server()
-    for i in range(10):
+    for i in range(1):
         create_to_do(str(i))
         assert_todos(str(i))
     shutdown_server(p)
 
 
 @pytest.mark.monitor_test
-def test_add_10_todo_t2(app):
-    for i in range(10):
+def test_add_1_todo_t2(app):
+    for i in range(1):
         create_to_do(str(i))
 
 
 @pytest.mark.monitor_test
-def test_add_100_todo_t1():
+def test_add_2_todo_t1():
     p = start_server()
-    for i in range(100):
+    for i in range(2):
         create_to_do(str(i))
         assert_todos(str(i))
     shutdown_server(p)
 
 
 @pytest.mark.monitor_test
-def test_add_100_todo_t2(app):
-    for i in range(100):
+def test_add_2_todo_t2(app):
+    for i in range(2):
         create_to_do(str(i))
 
 
 @pytest.mark.monitor_test
-def test_add_1000_todo_t1():
+def test_add_4_todo_t1():
     p = start_server()
-    for i in range(1000):
+    for i in range(4):
         create_to_do(str(i))
         assert_todos(str(i))
     shutdown_server(p)
 
 
 @pytest.mark.monitor_test
-def test_add_1000_todo_t2(app):
-    for i in range(1000):
+def test_add_4_todo_t2(app):
+    for i in range(4):
+        create_to_do(str(i))
+
+
+@pytest.mark.monitor_test
+def test_add_8_todo_t1():
+    p = start_server()
+    for i in range(8):
+        create_to_do(str(i))
+        assert_todos(str(i))
+    shutdown_server(p)
+
+
+@pytest.mark.monitor_test
+def test_add_8_todo_t2(app):
+    for i in range(8):
+        create_to_do(str(i))
+
+
+@pytest.mark.monitor_test
+def test_add_16_todo_t1():
+    p = start_server()
+    for i in range(16):
+        create_to_do(str(i))
+        assert_todos(str(i))
+    shutdown_server(p)
+
+
+@pytest.mark.monitor_test
+def test_add_16_todo_t2(app):
+    for i in range(16):
+        create_to_do(str(i))
+
+
+@pytest.mark.monitor_test
+def test_add_32_todo_t1():
+    p = start_server()
+    for i in range(32):
+        create_to_do(str(i))
+        assert_todos(str(i))
+    shutdown_server(p)
+
+
+@pytest.mark.monitor_test
+def test_add_32_todo_t2(app):
+    for i in range(32):
+        create_to_do(str(i))
+
+
+@pytest.mark.monitor_test
+def test_add_64_todo_t1():
+    p = start_server()
+    for i in range(64):
+        create_to_do(str(i))
+        assert_todos(str(i))
+    shutdown_server(p)
+
+
+@pytest.mark.monitor_test
+def test_add_64_todo_t2(app):
+    for i in range(64):
+        create_to_do(str(i))
+
+
+@pytest.mark.monitor_test
+def test_add_128_todo_t1():
+    p = start_server()
+    for i in range(128):
+        create_to_do(str(i))
+        assert_todos(str(i))
+    shutdown_server(p)
+
+
+@pytest.mark.monitor_test
+def test_add_128_todo_t2(app):
+    for i in range(128):
+        create_to_do(str(i))
+
+
+@pytest.mark.monitor_test
+def test_add_256_todo_t1():
+    p = start_server()
+    for i in range(256):
+        create_to_do(str(i))
+        assert_todos(str(i))
+    shutdown_server(p)
+
+
+@pytest.mark.monitor_test
+def test_add_256_todo_t2(app):
+    for i in range(256):
+        create_to_do(str(i))
+
+
+@pytest.mark.monitor_test
+def test_add_512_todo_t1():
+    p = start_server()
+    for i in range(512):
+        create_to_do(str(i))
+        assert_todos(str(i))
+    shutdown_server(p)
+
+
+@pytest.mark.monitor_test
+def test_add_512_todo_t2(app):
+    for i in range(512):
+        create_to_do(str(i))
+
+
+@pytest.mark.monitor_test
+def test_add_1024_todo_t1():
+    p = start_server()
+    for i in range(1024):
+        create_to_do(str(i))
+        assert_todos(str(i))
+    shutdown_server(p)
+
+
+@pytest.mark.monitor_test
+def test_add_1024_todo_t2(app):
+    for i in range(1024):
+        create_to_do(str(i))
+
+
+@pytest.mark.monitor_test
+def test_add_2048_todo_t1():
+    p = start_server()
+    for i in range(2048):
+        create_to_do(str(i))
+        assert_todos(str(i))
+    shutdown_server(p)
+
+
+@pytest.mark.monitor_test
+def test_add_2048_todo_t2(app):
+    for i in range(2048):
         create_to_do(str(i))
