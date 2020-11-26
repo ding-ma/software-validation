@@ -1,7 +1,6 @@
 import subprocess
 
-ITERATIONS_T1 = [i*50 for i in range(1, 21)]
-ITERATIONS_T2 = [i for i in range(1, 5000)]
+ITERATIONS = [i * 25 for i in range(1, 41)]
 
 
 def start_server():
