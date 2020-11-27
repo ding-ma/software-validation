@@ -61,6 +61,5 @@ def test_delete_todo():
         t1_end = time()
         t1_writer.writerow([i, t1_start, t1_end, t1_end-t1_start])
         t2_writer.writerow([i, t2_start, t2_end, t2_end-t2_start])
-        sleep(5)
 
     t1_file.close()
