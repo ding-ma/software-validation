@@ -7,7 +7,7 @@ import requests
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
 from ..set_up import start_server, shutdown_server,  ITERATIONS
-from .test_todo_add import create_to_do
+from .test_add_todo import create_to_do
 
 url_todo = "http://localhost:4567/todos"
 
