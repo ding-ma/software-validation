@@ -1,4 +1,5 @@
 import subprocess
+import requests
 
 ITERATIONS = [i * 25 for i in range(1, 41)]
 
@@ -17,4 +18,11 @@ def start_server():
 def shutdown_server(process):
     subprocess.call(['curl', 'http://localhost:4567/shutdown'], shell=True, stdout=subprocess.DEVNULL,
                     stderr=subprocess.STDOUT)
-    process.kill()
+    try:
+        requests.get("http://localhost:4567/docs")
+    except requests.exceptions.ConnectionError:
+        # kill PID so we dont get zombie process
+        process.kill()
+    except Exception:
+        # If the server is not down, shut it again.
+        shutdown_server(process)

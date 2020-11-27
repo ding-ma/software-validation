@@ -47,11 +47,15 @@ def test_add_todo():
 
         proc = start_server()
         for j in range(i):  # add x amount of todos
-            t2_start = time()
-            create_to_do(str(i))
-            t2_end = time()
-            assert_todos(str(i))
-            t2_writer.writerow([j, t2_start, t2_end, t2_end - t2_start])
+            if i == ITERATIONS[-1]:
+                t2_start = time()
+                create_to_do(str(i))
+                t2_end = time()
+                assert_todos(str(i))
+                t2_writer.writerow([j, t2_start, t2_end, t2_end - t2_start])
+            else:
+                create_to_do(str(i))
+                assert_todos(str(i))
         shutdown_server(proc)
 
         t1_end = time()
