@@ -23,6 +23,6 @@ def shutdown_server(process):
     except requests.exceptions.ConnectionError:
         # kill PID so we dont get zombie process
         process.kill()
-    except Exception:
-        # If the server is not down, shut it again.
-        shutdown_server(process)
+        return
+    # If the server is not down, shut it again.
+    return shutdown_server(process)
