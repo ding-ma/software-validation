@@ -24,6 +24,20 @@ Since sonarqube is the only service in the docekr-compose, you can simply run
 docker-compose up
 ```
 
+You will then need to login to sonarqube, located (here)[http://localhost:9000] with System Administrator credentials (login=admin, password=admin).
+
+Token: 82da8d3e710d9239772b1e0f385d555233286c04
+
+Once you are inside the `thingifier-1.5.5` folder, run the following script in order to generate project information.
+
+```
+mvn clean sonar:sonar \
+  -Dsonar.projectKey=todo-manager \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=82da8d3e710d9239772b1e0f385d555233286c04 \
+  -Dsonar.java.binaries=target
+```
+
 To shutdown sonarqube, simply enter `ctrl + c` within the running terminal, or type
 
 ```
