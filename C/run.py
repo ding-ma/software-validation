@@ -8,6 +8,13 @@ from tests.todo.test_delete_todo import test_delete_todo
 from tests.todo.test_add_todo import test_add_todo
 from tests.todo.test_change_todo import test_change_todo
 
+from tests.project.test_delete_project import test_delete_project
+from tests.project.test_add_project import test_add_project
+from tests.project.test_change_project import test_change_project
+
+from tests.context.test_delete_category import test_delete_category
+from tests.context.test_add_category import test_add_category
+from tests.context.test_change_category import test_change_category
 
 def logger():
     log = open(os.path.join("test_data", "system_logs.csv"), "w", newline='')
@@ -27,6 +34,36 @@ def main():
     logger_thread = Thread(target=logger)
     logger_thread.start()
 
+    print("Starting Test ---- Test Add Category")
+    create_category = Thread(target=test_add_category)
+    create_category.start()
+    create_category.join()
+
+    print("Starting Test ---- Test Change Category")
+    change_category = Thread(target=test_change_category)
+    change_category.start()
+    change_category.join()
+
+    print("Starting Test ---- Test Delete Category")
+    delete_category = Thread(target=test_delete_category)
+    delete_category.start()
+    delete_category.join()
+
+    print("Starting Test ---- Test Add Project")
+    create_project = Thread(target=test_add_project)
+    create_project.start()
+    create_project.join()
+
+    print("Starting Test ---- Test Change Project")
+    change_project = Thread(target=test_change_project)
+    change_project.start()
+    change_project.join()
+
+    print("Starting Test ---- Test Delete Project")
+    delete_project = Thread(target=test_delete_project)
+    delete_project.start()
+    delete_project.join()
+
     print("Starting Test ---- Test Add Todo")
     create_todo = Thread(target=test_add_todo)
     create_todo.start()
@@ -41,8 +78,6 @@ def main():
     delete_todo = Thread(target=test_delete_todo)
     delete_todo.start()
     delete_todo.join()
-
-    # todo: add any other tasks here....
 
     logger_thread.run = False
     logger_thread.join()
