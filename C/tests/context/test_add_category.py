@@ -45,12 +45,12 @@ def test_add_category():
 
         proc = start_server()
         for j in range(i):  # add x amount of categories
-            if i == ITERATIONS[-1]:
+            if j == i-1:
                 t2_start = time()
                 create_category(str(i))
                 t2_end = time()
                 assert_categories(str(i))
-                t2_writer.writerow([j, t2_start, t2_end, t2_end - t2_start])
+                t2_writer.writerow([j+1, t2_start, t2_end, t2_end - t2_start])
             else:
                 create_category(str(i))
                 assert_categories(str(i))

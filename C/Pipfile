@@ -10,6 +10,8 @@ requests = "*"
 json2xml = "*"
 xmltodict = "*"
 psutil = "*"
+numpy = "1.19.3" # bug in windows runtime that requires 1.19.3
+pandas = "*"
 
 [requires]
 python_version = "3.8"

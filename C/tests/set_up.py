@@ -1,7 +1,7 @@
 import subprocess
 import requests
 
-ITERATIONS = [i * 25 for i in range(1, 41)]
+ITERATIONS = [i * 50 for i in range(1, 21)]
 
 
 def start_server():

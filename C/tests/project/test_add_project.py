@@ -47,12 +47,12 @@ def test_add_project():
 
         proc = start_server()
         for j in range(i):  # add x amount of projects
-            if i == ITERATIONS[-1]:
+            if i-1 == j:
                 t2_start = time()
                 create_project(str(i))
                 t2_end = time()
                 assert_projects(str(i))
-                t2_writer.writerow([j, t2_start, t2_end, t2_end - t2_start])
+                t2_writer.writerow([j+1, t2_start, t2_end, t2_end - t2_start])
             else:
                 create_project(str(i))
                 assert_projects(str(i))
