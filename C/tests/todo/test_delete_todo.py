@@ -1,16 +1,15 @@
 import csv
-import json
 import os
-from time import time, sleep
+from time import time
 
 import requests
 
-from ..headers import send_json_recv_json_headers, recv_json_headers
-from ..set_up import start_server, shutdown_server,  ITERATIONS
 from .test_add_todo import create_to_do
+from ..headers import recv_json_headers
+from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
 
-url_todo = "http://localhost:4567/todos"
-
+url_todo = "http://localhost:%d/todos"
+PORT_IDX = 8
 todo_data = {
     "title": "",
     "doneStatus": False,
@@ -18,20 +17,13 @@ todo_data = {
 }
 
 
-def delete_todo_with_assert(run_id):
-    deleted_todo = requests.get(url_todo + "/" + run_id, headers=recv_json_headers).json()["todos"][0]
-    r = requests.delete(url_todo + "/" + run_id, headers=send_json_recv_json_headers)
-    todos = requests.get(url_todo, headers=recv_json_headers).json()["todos"]
-    assert r.status_code == 200 and deleted_todo not in todos
-
-
-def delete_todo(last_todo):
-    deleted_todo = requests.delete(url_todo + "/" + last_todo['id'], headers=recv_json_headers)
+def delete_todo(last_todo, port):
+    deleted_todo = requests.delete(url_todo % port + "/" + last_todo['id'], headers=recv_json_headers)
     assert deleted_todo.status_code == 200
 
 
-def assert_deleted_todo(deleted_todo):
-    todos = requests.get(url_todo, headers=recv_json_headers)
+def assert_deleted_todo(deleted_todo, port):
+    todos = requests.get(url_todo % port, headers=recv_json_headers)
     assert todos.status_code == 200 and deleted_todo not in todos.json()["todos"]
 
 
@@ -44,23 +36,24 @@ def test_delete_todo():
     t2_writer = csv.writer(t2_file)
     t2_writer.writerow(["Iteration", "Time_start", "Time_end", "Time_difference"])
 
-    for i in ITERATIONS:
+    for i, p in zip(ITERATIONS, PORTS[PORT_IDX]):
         print(i)
         t1_start = time()
-        proc = start_server()
-        for j in range(1, i+1):
-            last = create_to_do(str(j))
+        proc = start_server(p)
+        for j in range(1, i + 1):
+            last = create_to_do(str(j), p)
         # only delete the last one
         t2_start = time()
-        delete_todo(last)
+        delete_todo(last, p)
         t2_end = time()
 
-        assert_deleted_todo(last)
-        shutdown_server(proc)
+        assert_deleted_todo(last, p)
+        shutdown_server(proc, p)
 
         t1_end = time()
-        t1_writer.writerow([i, t1_start, t1_end, t1_end-t1_start])
-        t2_writer.writerow([i, t2_start, t2_end, t2_end-t2_start])
-        sleep(20)
+        t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])
+        t2_writer.writerow([i, t2_start, t2_end, t2_end - t2_start])
+        # sleep(30)
 
     t1_file.close()
+    t2_file.close()

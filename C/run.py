@@ -37,7 +37,7 @@ def logger():
         now = time()
         cpu_usage = psutil.cpu_percent()
         log_writer.writerow([now, cpu_usage,  psutil.virtual_memory().used, psutil.virtual_memory().free])
-        sleep(0.015)
+        sleep(0.02)
     log.close()
 
 
@@ -68,39 +68,41 @@ def main():
     create_project = Thread(target=test_add_project)
     create_project.start()
     create_project.join()
-
-    print("Starting Test ---- Test Change Project")
-    # test_change_project()
-    change_project = Thread(target=test_change_project)
-    change_project.start()
-    change_project.join()
-
-    print("Starting Test ---- Test Delete Project")
-    # test_delete_project()
-    delete_project = Thread(target=test_delete_project)
-    delete_project.start()
-    delete_project.join()
-
-    print("Starting Test ---- Test Add Todo")
-    # test_add_todo()
-    create_todo = Thread(target=test_add_todo)
-    create_todo.start()
-    create_todo.join()
-
-    print("Starting Test ---- Test Change Todo")
-    # test_change_todo()
-    change_todo = Thread(target=test_change_todo)
-    change_todo.start()
-    change_todo.join()
-
-    print("Starting Test ---- Test Delete Todo")
-    # test_delete_todo()
-    delete_todo = Thread(target=test_delete_todo)
-    delete_todo.start()
-    delete_todo.join()
+    #
+    # print("Starting Test ---- Test Change Project")
+    # # test_change_project()
+    # change_project = Thread(target=test_change_project)
+    # change_project.start()
+    # change_project.join()
+    #
+    # print("Starting Test ---- Test Delete Project")
+    # # test_delete_project()
+    # delete_project = Thread(target=test_delete_project)
+    # delete_project.start()
+    # delete_project.join()
+    #
+    # print("Starting Test ---- Test Add Todo")
+    # # test_add_todo()
+    # create_todo = Thread(target=test_add_todo)
+    # create_todo.start()
+    # create_todo.join()
+    #
+    # print("Starting Test ---- Test Change Todo")
+    # # test_change_todo()
+    # change_todo = Thread(target=test_change_todo)
+    # change_todo.start()
+    # change_todo.join()
+    #
+    # print("Starting Test ---- Test Delete Todo")
+    # # test_delete_todo()
+    # delete_todo = Thread(target=test_delete_todo)
+    # delete_todo.start()
+    # delete_todo.join()
 
     logger_thread.run = False
     logger_thread.join()
+
+
 
 
 if __name__ == "__main__":

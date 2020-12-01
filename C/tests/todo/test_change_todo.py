@@ -6,11 +6,11 @@ from time import time, sleep
 import requests
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
-from ..set_up import start_server, shutdown_server, ITERATIONS
+from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
 from .test_add_todo import create_to_do
 
-url_todo = "http://localhost:4567/todos"
-
+url_todo = "http://localhost:%d/todos"
+PORT_IDX = 7
 todo_data = {
     "title": "changed_last_title",
     "doneStatus": False,
@@ -18,13 +18,13 @@ todo_data = {
 }
 
 
-def change_todo(last_todo):
-    r = requests.put(url_todo + "/" + last_todo['id'], data=json.dumps(todo_data), headers=send_json_recv_json_headers)
+def change_todo(last_todo, port):
+    r = requests.put(url_todo % port + "/" + last_todo['id'], data=json.dumps(todo_data), headers=send_json_recv_json_headers)
     assert r.status_code == 200
 
 
-def assert_changed_todo(last_todo):
-    todo = requests.get(url_todo + "/" + last_todo['id'], headers=recv_json_headers)
+def assert_changed_todo(last_todo, port):
+    todo = requests.get(url_todo % port + "/" + last_todo['id'], headers=recv_json_headers)
     assert todo.status_code == 200 and todo_data['title'] in todo.text and todo_data['description'] in todo.text
 
 
@@ -37,24 +37,25 @@ def test_change_todo():
     t2_writer = csv.writer(t2_file)
     t2_writer.writerow(["Iteration", "Time_start", "Time_end", "Time_difference"])
 
-    for i in ITERATIONS:
+    for i, p in zip(ITERATIONS, PORTS[PORT_IDX]):
         print(i)
         t1_start = time()
 
-        proc = start_server()
+        proc = start_server(p)
         for j in range(i + 1):  # add x amount of todos
-            last = create_to_do(str(i))
+            last = create_to_do(str(i),p)
 
         t2_start = time()
-        change_todo(last)
+        change_todo(last,p)
         t2_end = time()
 
-        assert_changed_todo(last)
-        shutdown_server(proc)
+        assert_changed_todo(last,p)
+        shutdown_server(proc,p)
 
         t1_end = time()
         t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])
         t2_writer.writerow([i, t2_start, t2_end, t2_end - t2_start])
-        sleep(20)
+        # sleep(30)
 
     t1_file.close()
+    t2_file.close()

@@ -6,9 +6,10 @@ from time import time, sleep
 import requests
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
-from ..set_up import start_server, shutdown_server, ITERATIONS
+from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
 
-url_categories = "http://localhost:4567/categories"
+PORT_IDX = 0
+url_categories = "http://localhost:%d/categories"
 
 category_data = {
     "title": "test",
@@ -16,18 +17,18 @@ category_data = {
 }
 
 
-def create_category(run_id):
+def create_category(run_id, port):
     category_data['title'] = "my_test-" + run_id
     category_data['description'] = "my_decrip-" + run_id
-    r = requests.post(url_categories, data=json.dumps(category_data), headers=send_json_recv_json_headers)
+    r = requests.post(url_categories % port, data=json.dumps(category_data), headers=send_json_recv_json_headers)
     res = r.json()
-    categories = requests.get(url_categories).json()["categories"]
+    categories = requests.get(url_categories % port).json()["categories"]
     assert r.status_code == 201 and res in categories
     return res
 
 
-def assert_categories(run_id):
-    r = requests.get(url_categories, headers=recv_json_headers)
+def assert_categories(run_id, port):
+    r = requests.get(url_categories % port, headers=recv_json_headers)
     assert r.status_code == 200 and "my_test-" + run_id in r.text and "my_decrip-" + run_id in r.text
 
 
@@ -40,25 +41,26 @@ def test_add_category():
     t2_writer = csv.writer(t2_file)
     t2_writer.writerow(["Iteration", "Time_start", "Time_end", "Time_difference"])
 
-    for i in ITERATIONS:
+    for i, p in zip(ITERATIONS, PORTS[PORT_IDX]):
         print(i)
         t1_start = time()
 
-        proc = start_server()
+        proc = start_server(p)
         for j in range(i):  # add x amount of categories
-            if j == i-1:
+            if j == i - 1:
                 t2_start = time()
-                create_category(str(i))
+                create_category(str(i), p)
                 t2_end = time()
-                assert_categories(str(i))
-                t2_writer.writerow([j+1, t2_start, t2_end, t2_end - t2_start])
+                assert_categories(str(i), p)
+                t2_writer.writerow([j + 1, t2_start, t2_end, t2_end - t2_start])
             else:
-                create_category(str(i))
-                assert_categories(str(i))
-        shutdown_server(proc)
+                create_category(str(i), p)
+                assert_categories(str(i), p)
+        shutdown_server(proc, p)
 
         t1_end = time()
         t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])
-        sleep(20)
+        # sleep(30)
 
     t1_file.close()
+    t2_file.close()

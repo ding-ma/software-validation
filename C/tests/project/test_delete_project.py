@@ -6,11 +6,11 @@ from time import time, sleep
 import requests
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
-from ..set_up import start_server, shutdown_server,  ITERATIONS
+from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
 from .test_add_project import create_project
 
-url_projects = "http://localhost:4567/projects"
-
+url_projects = "http://localhost:%d/projects"
+PORT_IDX = 5
 project_data = {
     "title": "",
     "completed": False,
@@ -18,20 +18,14 @@ project_data = {
     "description": ""
 }
 
-def delete_project_with_assert(run_id):
-    deleted_project = requests.get(url_projects + "/" + run_id, headers=recv_json_headers).json()["projects"][0]
-    r = requests.delete(url_projects + "/" + run_id, headers=send_json_recv_json_headers)
-    projects = requests.get(url_projects, headers=recv_json_headers).json()["projects"]
-    assert r.status_code == 200 and deleted_project not in projects
 
-
-def delete_project(last_project):
-    deleted_project = requests.delete(url_projects + "/" + last_project['id'], headers=recv_json_headers)
+def delete_project(last_project, port):
+    deleted_project = requests.delete(url_projects % port + "/" + last_project['id'], headers=recv_json_headers)
     assert deleted_project.status_code == 200
 
 
-def assert_deleted_project(deleted_project):
-    projects = requests.get(url_projects, headers=recv_json_headers)
+def assert_deleted_project(deleted_project, port):
+    projects = requests.get(url_projects % port, headers=recv_json_headers)
     assert projects.status_code == 200 and deleted_project not in projects.json()["projects"]
 
 
@@ -44,23 +38,23 @@ def test_delete_project():
     t2_writer = csv.writer(t2_file)
     t2_writer.writerow(["Iteration", "Time_start", "Time_end", "Time_difference"])
 
-    for i in ITERATIONS:
+    for i, p in zip(ITERATIONS, PORTS[PORT_IDX]):
         print(i)
         t1_start = time()
-        proc = start_server()
-        for j in range(1, i+1):
-            last = create_project(str(j))
+        proc = start_server(p)
+        for j in range(1, i + 1):
+            last = create_project(str(j), p)
         # only delete the last one
         t2_start = time()
-        delete_project(last)
+        delete_project(last, p)
         t2_end = time()
 
-        assert_deleted_project(last)
-        shutdown_server(proc)
+        assert_deleted_project(last, p)
+        shutdown_server(proc, p)
 
         t1_end = time()
-        t1_writer.writerow([i, t1_start, t1_end, t1_end-t1_start])
-        t2_writer.writerow([i, t2_start, t2_end, t2_end-t2_start])
-        sleep(20)
+        t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])
+        t2_writer.writerow([i, t2_start, t2_end, t2_end - t2_start])
 
     t1_file.close()
+    t2_file.close()
