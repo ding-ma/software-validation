@@ -15,6 +15,7 @@ category_data = {
     "description": ""
 }
 
+
 def create_category(run_id):
     category_data['title'] = "my_test-" + run_id
     category_data['description'] = "my_decrip-" + run_id
@@ -58,5 +59,6 @@ def test_add_category():
 
         t1_end = time()
         t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])
+        sleep(20)
 
     t1_file.close()

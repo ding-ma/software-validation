@@ -60,5 +60,6 @@ def test_add_todo():
 
         t1_end = time()
         t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])
+        sleep(20)
 
     t1_file.close()
