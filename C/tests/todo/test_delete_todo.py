@@ -1,12 +1,12 @@
 import csv
 import os
-from time import time
+from time import time, sleep
 
 import requests
 
 from .test_add_todo import create_to_do
 from ..headers import recv_json_headers
-from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
+from ..set_up import *
 
 url_todo = "http://localhost:%d/todos"
 PORT_IDX = 8
@@ -42,6 +42,7 @@ def test_delete_todo():
         proc = start_server(p)
         for j in range(1, i + 1):
             last = create_to_do(str(j), p)
+            sleep(PAUSE)
         # only delete the last one
         t2_start = time()
         delete_todo(last, p)

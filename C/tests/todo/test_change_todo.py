@@ -6,7 +6,7 @@ from time import time, sleep
 import requests
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
-from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
+from ..set_up import *
 from .test_add_todo import create_to_do
 
 url_todo = "http://localhost:%d/todos"
@@ -19,7 +19,8 @@ todo_data = {
 
 
 def change_todo(last_todo, port):
-    r = requests.put(url_todo % port + "/" + last_todo['id'], data=json.dumps(todo_data), headers=send_json_recv_json_headers)
+    r = requests.put(url_todo % port + "/" + last_todo['id'], data=json.dumps(todo_data),
+                     headers=send_json_recv_json_headers)
     assert r.status_code == 200
 
 
@@ -43,14 +44,15 @@ def test_change_todo():
 
         proc = start_server(p)
         for j in range(i + 1):  # add x amount of todos
-            last = create_to_do(str(i),p)
+            last = create_to_do(str(i), p)
+            sleep(PAUSE)
 
         t2_start = time()
-        change_todo(last,p)
+        change_todo(last, p)
         t2_end = time()
 
-        assert_changed_todo(last,p)
-        shutdown_server(proc,p)
+        assert_changed_todo(last, p)
+        shutdown_server(proc, p)
 
         t1_end = time()
         t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])

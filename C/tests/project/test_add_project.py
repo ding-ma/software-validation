@@ -6,7 +6,7 @@ from time import time, sleep
 import requests
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
-from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
+from ..set_up import *
 
 url_projects = "http://localhost:%d/projects"
 PORT_IDX = 3
@@ -57,6 +57,7 @@ def test_add_project():
             else:
                 create_project(str(i), p)
                 assert_projects(str(i), p)
+            sleep(PAUSE)
         shutdown_server(proc, p)
 
         t1_end = time()

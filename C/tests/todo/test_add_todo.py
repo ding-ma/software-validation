@@ -6,7 +6,7 @@ from time import time, sleep
 import requests
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
-from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
+from ..set_up import *
 
 url_todo = "http://localhost:%d/todos"
 PORT_IDX = 6
@@ -56,6 +56,7 @@ def test_add_todo():
             else:
                 create_to_do(str(i), p)
                 assert_todos(str(i), p)
+            sleep(PAUSE)
         shutdown_server(proc, p)
 
         t1_end = time()

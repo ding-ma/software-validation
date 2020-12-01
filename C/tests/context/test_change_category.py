@@ -6,7 +6,7 @@ from time import time, sleep
 import requests
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
-from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
+from ..set_up import *
 from .test_add_category import create_category
 
 url_categories = "http://localhost:%d/categories"
@@ -46,6 +46,7 @@ def test_change_category():
         proc = start_server(p)
         for j in range(i + 1):  # add x amount of categories
             last = create_category(str(i), p)
+            sleep(PAUSE)
 
         t2_start = time()
         change_category(last, p)

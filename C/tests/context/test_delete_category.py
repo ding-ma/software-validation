@@ -6,7 +6,7 @@ from time import time, sleep
 import requests
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
-from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
+from ..set_up import *
 from .test_add_category import create_category
 
 url_categories = "http://localhost:%d/categories"
@@ -36,19 +36,20 @@ def test_delete_category():
     t2_writer = csv.writer(t2_file)
     t2_writer.writerow(["Iteration", "Time_start", "Time_end", "Time_difference"])
 
-    for i,p in zip(ITERATIONS, PORTS[PORT_IDX]):
+    for i, p in zip(ITERATIONS, PORTS[PORT_IDX]):
         print(i)
         t1_start = time()
         proc = start_server(p)
         for j in range(1, i + 1):
-            last = create_category(str(j),p)
+            last = create_category(str(j), p)
+            sleep(PAUSE)
         # only delete the last one
         t2_start = time()
-        delete_category(last,p)
+        delete_category(last, p)
         t2_end = time()
 
-        assert_deleted_category(last,p)
-        shutdown_server(proc,p)
+        assert_deleted_category(last, p)
+        shutdown_server(proc, p)
 
         t1_end = time()
         t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])

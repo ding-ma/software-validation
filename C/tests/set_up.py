@@ -1,9 +1,10 @@
 import subprocess
 import requests
 
-ITERATIONS = [1, 5, 10, 25, 50, 100, 150, 300, 500, 700, 1000, 2000, 3000, 5000, 7500]
+ITERATIONS = [1, 5, 10, 25, 50, 100, 150, 300, 500, 700, 1000, 2000, 3000, 5000, 8000, 1000]
 BASE_PORT = 2000
 NUMBER_TESTS = 9
+PAUSE = 0.01
 PORTS = [[c + row * len(ITERATIONS) + BASE_PORT for c in range(len(ITERATIONS))] for row in range(NUMBER_TESTS)]
 
 

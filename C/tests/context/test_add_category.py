@@ -6,7 +6,7 @@ from time import time, sleep
 import requests
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
-from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
+from ..set_up import *
 
 PORT_IDX = 0
 url_categories = "http://localhost:%d/categories"
@@ -56,6 +56,7 @@ def test_add_category():
             else:
                 create_category(str(i), p)
                 assert_categories(str(i), p)
+            sleep(PAUSE)
         shutdown_server(proc, p)
 
         t1_end = time()

@@ -6,7 +6,7 @@ from time import time, sleep
 import requests
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
-from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
+from ..set_up import *
 from .test_add_project import create_project
 
 url_projects = "http://localhost:%d/projects"
@@ -44,6 +44,7 @@ def test_delete_project():
         proc = start_server(p)
         for j in range(1, i + 1):
             last = create_project(str(j), p)
+            sleep(PAUSE)
         # only delete the last one
         t2_start = time()
         delete_project(last, p)

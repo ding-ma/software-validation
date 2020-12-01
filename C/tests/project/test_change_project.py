@@ -6,7 +6,7 @@ from time import time, sleep
 import requests
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
-from ..set_up import start_server, shutdown_server, ITERATIONS, PORTS
+from ..set_up import *
 from .test_add_project import create_project
 
 url_projects = "http://localhost:%d/projects"
@@ -18,14 +18,17 @@ project_data = {
     "description": ""
 }
 
+
 def change_project(last_project, port):
-    r = requests.put(url_projects %port + "/" + last_project['id'], data=json.dumps(project_data), headers=send_json_recv_json_headers)
+    r = requests.put(url_projects % port + "/" + last_project['id'], data=json.dumps(project_data),
+                     headers=send_json_recv_json_headers)
     assert r.status_code == 200
 
 
 def assert_changed_project(last_project, port):
-    project = requests.get(url_projects %port + "/" + last_project['id'], headers=recv_json_headers)
-    assert project.status_code == 200 and project_data['title'] in project.text and project_data['description'] in project.text
+    project = requests.get(url_projects % port + "/" + last_project['id'], headers=recv_json_headers)
+    assert project.status_code == 200 and project_data['title'] in project.text and project_data[
+        'description'] in project.text
 
 
 def test_change_project():
@@ -37,20 +40,21 @@ def test_change_project():
     t2_writer = csv.writer(t2_file)
     t2_writer.writerow(["Iteration", "Time_start", "Time_end", "Time_difference"])
 
-    for i,p in zip(ITERATIONS, PORTS[PORT_IDX]):
+    for i, p in zip(ITERATIONS, PORTS[PORT_IDX]):
         print(i)
         t1_start = time()
 
         proc = start_server(p)
         for j in range(i + 1):  # add x amount of projects
-            last = create_project(str(i),p)
+            last = create_project(str(i), p)
+            sleep(PAUSE)
 
         t2_start = time()
-        change_project(last,p)
+        change_project(last, p)
         t2_end = time()
 
-        assert_changed_project(last,p)
-        shutdown_server(proc,p)
+        assert_changed_project(last, p)
+        shutdown_server(proc, p)
 
         t1_end = time()
         t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])
