@@ -1,8 +1,8 @@
 import subprocess
 import requests
 
-ITERATIONS = [1, 2, 5, 10, 25, 50, 75, 100, 150, 200, 300, 500, 700, 1000, 2000, 3000, 5000, 7500, 10000]
-BASE_PORT = 3000
+ITERATIONS = [1, 5, 10, 25, 50, 100, 150, 300, 500, 700, 1000, 2000, 3000, 5000, 7500]
+BASE_PORT = 2000
 NUMBER_TESTS = 9
 PORTS = [[c + row * len(ITERATIONS) + BASE_PORT for c in range(len(ITERATIONS))] for row in range(NUMBER_TESTS)]
 
@@ -30,4 +30,4 @@ def shutdown_server(process, port):
         process.kill()
         return
     # If the server is not down, shut it again.
-    return shutdown_server(process)
+    return shutdown_server(process, port)
