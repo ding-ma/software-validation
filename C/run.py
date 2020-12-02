@@ -1,27 +1,19 @@
-from threading import Thread, currentThread
-from time import sleep, time
-import psutil
 import csv
 import os
+from threading import Thread, currentThread
 
-from tests.todo.test_delete_todo import test_delete_todo
-from tests.todo.test_add_todo import test_add_todo
-from tests.todo.test_change_todo import test_change_todo
+import psutil
+from time import sleep, time
 
-from tests.project.test_delete_project import test_delete_project
-from tests.project.test_add_project import test_add_project
-from tests.project.test_change_project import test_change_project
-
-from tests.context.test_delete_category import test_delete_category
 from tests.context.test_add_category import test_add_category
 from tests.context.test_change_category import test_change_category
-
-
-# def get_jar_pid():
-#     for p in psutil.process_iter(attrs=None, ad_value=None):
-#         if p.name == "java.exe":
-#             return p.pid
-#     return None
+from tests.context.test_delete_category import test_delete_category
+from tests.project.test_add_project import test_add_project
+from tests.project.test_change_project import test_change_project
+from tests.project.test_delete_project import test_delete_project
+from tests.todo.test_add_todo import test_add_todo
+from tests.todo.test_change_todo import test_change_todo
+from tests.todo.test_delete_todo import test_delete_todo
 
 
 def logger():
@@ -30,10 +22,6 @@ def logger():
     log_writer.writerow(["time", "cpu_usage(%)", "used_memory", "free_memory"])
 
     while getattr(currentThread(), "run", True):
-        # children = psutil.Process().children(recursive=True)
-        # for process in children:
-        #     print(process)
-        # process = psutil.Process(get_jar_pid())
         now = time()
         cpu_usage = psutil.cpu_percent()
         log_writer.writerow([now, cpu_usage,  psutil.virtual_memory().used, psutil.virtual_memory().free])

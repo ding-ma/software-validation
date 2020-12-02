@@ -1,9 +1,8 @@
 import csv
 import json
 import os
-from time import time, sleep
 
-import requests
+from time import time, sleep
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
 from ..set_up import *
@@ -47,6 +46,7 @@ def test_add_todo():
 
         proc = start_server(p)
         for j in range(i):  # add x amount of todos
+            print(j)
             if i - 1 == j:
                 t2_start = time()
                 create_to_do(str(i), p)
