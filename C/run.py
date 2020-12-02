@@ -3,7 +3,7 @@ import os
 from threading import Thread, currentThread
 
 import psutil
-from time import sleep, time
+from time import sleep, time_ns
 
 from tests.context.test_add_category import test_add_category
 from tests.context.test_change_category import test_change_category
@@ -22,10 +22,10 @@ def logger():
     log_writer.writerow(["time", "cpu_usage(%)", "used_memory", "free_memory"])
 
     while getattr(currentThread(), "run", True):
-        now = time()
+        now = time_ns()
         cpu_usage = psutil.cpu_percent()
         log_writer.writerow([now, cpu_usage,  psutil.virtual_memory().used, psutil.virtual_memory().free])
-        sleep(0.02)
+        sleep(0.0005)
     log.close()
 
 

@@ -1,7 +1,7 @@
 import csv
 import json
 import os
-from time import time, sleep
+from time import time_ns, sleep
 
 import requests
 
@@ -44,14 +44,14 @@ def test_add_project():
 
     for i, p in zip(ITERATIONS, PORTS[PORT_IDX]):
         print(i)
-        t1_start = time()
+        t1_start = time_ns()
 
         proc = start_server(p)
         for j in range(i):  # add x amount of projects
             if i - 1 == j:
-                t2_start = time()
+                t2_start = time_ns()
                 create_project(str(i), p)
-                t2_end = time()
+                t2_end = time_ns()
                 assert_projects(str(i), p)
                 t2_writer.writerow([j + 1, t2_start, t2_end, t2_end - t2_start])
             else:
@@ -60,7 +60,7 @@ def test_add_project():
             sleep(PAUSE)
         shutdown_server(proc, p)
 
-        t1_end = time()
+        t1_end = time_ns()
         t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])
 
     t1_file.close()

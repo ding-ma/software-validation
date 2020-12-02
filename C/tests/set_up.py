@@ -10,7 +10,7 @@ PORTS = [[c + row * len(ITERATIONS) + BASE_PORT for c in range(len(ITERATIONS))]
 
 
 def start_server(port):
-    print("running on port", port)
+    # print("running on port", port)
     process = subprocess.Popen(["java", "-jar", "runTodoManagerRestAPI-1.5.5.jar", "-port={}".format(port)], shell=True,
                                stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 

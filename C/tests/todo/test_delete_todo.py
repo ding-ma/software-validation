@@ -1,6 +1,6 @@
 import csv
 import os
-from time import time, sleep
+from time import time_ns, sleep
 
 import requests
 
@@ -38,20 +38,20 @@ def test_delete_todo():
 
     for i, p in zip(ITERATIONS, PORTS[PORT_IDX]):
         print(i)
-        t1_start = time()
+        t1_start = time_ns()
         proc = start_server(p)
         for j in range(1, i + 1):
             last = create_to_do(str(j), p)
             sleep(PAUSE)
         # only delete the last one
-        t2_start = time()
+        t2_start = time_ns()
         delete_todo(last, p)
-        t2_end = time()
+        t2_end = time_ns()
 
         assert_deleted_todo(last, p)
         shutdown_server(proc, p)
 
-        t1_end = time()
+        t1_end =time_ns()
         t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])
         t2_writer.writerow([i, t2_start, t2_end, t2_end - t2_start])
         # sleep(30)
