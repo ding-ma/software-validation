@@ -15,15 +15,20 @@ def start_server(port):
     # global status_code
     process = subprocess.Popen(["java", "-jar", "runTodoManagerRestAPI-1.5.5.jar", "-port={}".format(port)], 
                                stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-    sleep(5)
+
+    process = subprocess.Popen(['curl', 'http://localhost:{}/docs'.format(port)], 
+                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    return_code = process.communicate()
+    while process.returncode:  # Verify the system is up before starting the test
+        process = subprocess.Popen(['curl', 'http://localhost:{}/docs'.format(port)], 
+                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        return_code = process.communicate()                     
+    
     return process
 
 
 def shutdown_server(process, port):
-    try:
-        requests.get('http://localhost:{}/shutdown'.format(port))
-    except:
-        pass
+    subprocess.Popen(['curl', 'http://localhost:{}/shutdown'.format(port)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     try:
         requests.get("http://localhost:{}/docs".format(port))
     except requests.exceptions.ConnectionError:
