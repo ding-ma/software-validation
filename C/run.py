@@ -22,7 +22,7 @@ def logger():
     log_writer.writerow(["time", "cpu_usage(%)", "used_memory", "free_memory"])
 
     while getattr(currentThread(), "run", True):
-        now = perf_counter
+        now = perf_counter()
         cpu_usage = psutil.cpu_percent()
         log_writer.writerow([now, cpu_usage, psutil.virtual_memory().used, psutil.virtual_memory().free])
         sleep(0.01)

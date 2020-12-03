@@ -2,7 +2,8 @@ import csv
 import json
 import os
 
-from time import perf_counter
+import requests
+from time import perf_counter, sleep
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
 from ..set_up import *

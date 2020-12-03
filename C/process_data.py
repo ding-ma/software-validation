@@ -1,5 +1,6 @@
-import pandas as pd
 import os
+
+import pandas as pd
 
 base_path = os.path.join("test_data")
 
@@ -13,9 +14,9 @@ add_cat = pd.read_csv(os.path.join(base_path, "add_category_time_stamps_t1.csv")
 for iteration in add_cat.itertuples():
     start_index = abs(sys_logs['time'] - iteration.Time_start).idxmin()
     end_index = abs(sys_logs['time'] - iteration.Time_end).idxmin()
-    data_point = sys_logs.loc[[start_index,end_index]]
+    # data_point = sys_logs.loc[[start_index,end_index]]
 
-    print(data_point)
+    print(start_index, end_index)
     # print(data_point['total_used_memory(bytes)'])
     # print(data_point['cpu_usage(%)'])
     # print(sys_logs[end_index - 5: end_index])
