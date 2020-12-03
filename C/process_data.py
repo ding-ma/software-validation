@@ -16,8 +16,10 @@ for iteration in add_cat.itertuples():
     end_index = abs(sys_logs['time'] - iteration.Time_end).idxmin()
     # data_point = sys_logs.loc[[start_index,end_index]]
 
-    print(start_index, end_index)
+    print(start_index, iteration.Time_start, end_index, iteration.Time_end)
+    print(sys_logs[start_index:end_index])
     # print(data_point['total_used_memory(bytes)'])
     # print(data_point['cpu_usage(%)'])
     # print(sys_logs[end_index - 5: end_index])
     print("----------------------")
+print(sys_logs.shape)

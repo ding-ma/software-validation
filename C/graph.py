@@ -99,6 +99,41 @@ def plotTimesT1(mode):
     # plt.show()
 
 
+def plotCPUMemPerOperation(mode):
+    # Get data
+    addIterations, addtimes, addUsages, addMemUsages = getCPUandMem(
+        './test_data/add_' + mode + '_time_stamps_t2.csv')
+
+    changeIterations, changetimes, changeUsages, changeMemUsages = getCPUandMem(
+        './test_data/change_' + mode + '_time_stamps_t2.csv')
+
+    deleteIterations, deletetimes, deleteUsages, deleteMemUsages = getCPUandMem(
+        './test_data/delete_' + mode + '_time_stamps_t2.csv')
+    # Plot Mem vs Sample Time
+
+    plt.figure()
+    plt.plot(addtimes, addMemUsages, label="add")
+    plt.plot(changetimes, changeMemUsages, label="change")
+    plt.plot(deletetimes, deleteMemUsages, label="delete")
+    plt.title(mode.capitalize() + ' delta free memory vs sample time')
+    plt.xlabel('Time (seconds)')
+    plt.ylabel('Delta free memory (bytes)')
+    plt.legend()
+    plt.savefig('./graphs/DeltaFreeMem_vs_sampleTime_for_' + mode + '.png')
+    plt.show()
+
+    plt.figure()
+    plt.plot(addtimes, addUsages, label="add")
+    plt.plot(changetimes, changeUsages, label="change")
+    plt.plot(deletetimes, deleteUsages, label="delete")
+    plt.title(mode.capitalize() + ' delta CPU usage vs sample time')
+    plt.xlabel('Time (seconds)')
+    plt.ylabel('Delta free memory (bytes)')
+    plt.legend()
+    plt.savefig('./graphs/DeltaCPU_vs_sampleTime_for_' + mode + '.png')
+    plt.show()
+
+
 def plotCPUandMem(mode):
     # Get data
     categoryIterations, categoryTimes, categoryCpuUsages, categoryMemUsages = getCPUandMem(
@@ -164,6 +199,10 @@ def plotCPUandMem(mode):
 plotCPUandMem("add")
 plotCPUandMem("delete")
 plotCPUandMem("change")
+
+plotCPUMemPerOperation("todo")
+plotCPUMemPerOperation("project")
+plotCPUMemPerOperation("category")
 
 plotTimesT1("add")
 plotTimesT1("delete")
