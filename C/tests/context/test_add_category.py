@@ -1,9 +1,8 @@
 import csv
 import json
 import os
-from time import time_ns, sleep
 
-import requests
+from time import time_ns
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
 from ..set_up import *
@@ -21,10 +20,8 @@ def create_category(run_id, port):
     category_data['title'] = "my_test-" + run_id
     category_data['description'] = "my_decrip-" + run_id
     r = requests.post(url_categories % port, data=json.dumps(category_data), headers=send_json_recv_json_headers)
-    res = r.json()
-    categories = requests.get(url_categories % port).json()["categories"]
-    assert r.status_code == 201 and res in categories
-    return res
+    assert r.status_code == 201
+    return r.json()
 
 
 def assert_categories(run_id, port):

@@ -1,6 +1,7 @@
 import subprocess
 
 import requests
+from time import sleep
 
 ITERATIONS = [1, 5, 10, 25, 50, 100, 150, 300, 500, 700, 1000, 2000, 3000, 5000, 8000, 10000]
 BASE_PORT = 2000
@@ -11,20 +12,24 @@ PORTS = [[c + row * len(ITERATIONS) + BASE_PORT for c in range(len(ITERATIONS))]
 
 def start_server(port):
     # print("running on port", port)
+    # global status_code
     process = subprocess.Popen(["java", "-jar", "runTodoManagerRestAPI-1.5.5.jar", "-port={}".format(port)], shell=True,
                                stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
-    status_code = subprocess.check_call(['curl', 'http://localhost:{}/docs'.format(port)], shell=True,
-                                        stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-    while status_code:  # Verify the system is up before starting the test
-        status_code = subprocess.check_call(['curl', 'http://localhost:{}/docs'.format(port)], shell=True,
-                                            stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+    sleep(5)
+    # status_code = subprocess.check_call(['curl', 'http://localhost:{}/docs'.format(port)], shell=True,
+    #                                     stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+    # while status_code:  # Verify the system is up before starting the test
+    #     status_code = subprocess.check_call(['curl', 'http://localhost:{}/docs'.format(port)], shell=True,
+    #                                         stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
     return process
 
 
 def shutdown_server(process, port):
-    subprocess.call(['curl', 'http://localhost:{}/shutdown'.format(port)], shell=True, stdout=subprocess.DEVNULL,
-                    stderr=subprocess.STDOUT)
+    try:
+        requests.get('http://localhost:{}/shutdown'.format(port))
+    except:
+        pass
     try:
         requests.get("http://localhost:{}/docs".format(port))
     except requests.exceptions.ConnectionError:

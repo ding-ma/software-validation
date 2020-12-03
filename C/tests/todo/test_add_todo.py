@@ -2,7 +2,7 @@ import csv
 import json
 import os
 
-from time import time_ns, sleep
+from time import time_ns
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
 from ..set_up import *
@@ -20,10 +20,8 @@ def create_to_do(run_id, port):
     todo_data['title'] = "my_test-" + run_id
     todo_data['description'] = "my_decrip-" + run_id
     r = requests.post(url_todo % port, data=json.dumps(todo_data), headers=send_json_recv_json_headers)
-    res = r.json()
-    todos = requests.get(url_todo % port).json()["todos"]
-    assert r.status_code == 201 and res in todos
-    return res
+    assert r.status_code == 201
+    return r.json()
 
 
 def assert_todos(run_id, port):

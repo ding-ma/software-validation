@@ -1,9 +1,8 @@
 import csv
 import json
 import os
-from time import time_ns, sleep
 
-import requests
+from time import time_ns
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
 from ..set_up import *
@@ -22,10 +21,8 @@ def create_project(run_id, port):
     project_data['title'] = "my_test-" + run_id
     project_data['description'] = "my_decrip-" + run_id
     r = requests.post(url_projects % port, data=json.dumps(project_data), headers=send_json_recv_json_headers)
-    res = r.json()
-    projects = requests.get(url_projects % port).json()["projects"]
-    assert r.status_code == 201 and res in projects
-    return res
+    assert r.status_code == 201
+    return r.json()
 
 
 def assert_projects(run_id, port):
