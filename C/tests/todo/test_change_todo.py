@@ -1,13 +1,13 @@
 import csv
 import json
 import os
-from time import time_ns, sleep
 
 import requests
+from time import sleep, perf_counter
 
+from .test_add_todo import create_to_do
 from ..headers import send_json_recv_json_headers, recv_json_headers
 from ..set_up import *
-from .test_add_todo import create_to_do
 
 url_todo = "http://localhost:%d/todos"
 PORT_IDX = 7
@@ -40,21 +40,21 @@ def test_change_todo():
 
     for i, p in zip(ITERATIONS, PORTS[PORT_IDX]):
         print(i)
-        t1_start = time_ns()
+        t1_start = perf_counter()
 
         proc = start_server(p)
         for j in range(i + 1):  # add x amount of todos
             last = create_to_do(str(i), p)
             sleep(PAUSE)
 
-        t2_start = time_ns()
+        t2_start = perf_counter()
         change_todo(last, p)
-        t2_end = time_ns()
+        t2_end = perf_counter()
 
         assert_changed_todo(last, p)
         shutdown_server(proc, p)
 
-        t1_end = time_ns()
+        t1_end = perf_counter()
         t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])
         t2_writer.writerow([i, t2_start, t2_end, t2_end - t2_start])
         # sleep(30)

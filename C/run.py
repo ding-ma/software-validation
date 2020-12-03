@@ -24,8 +24,8 @@ def logger():
     while getattr(currentThread(), "run", True):
         now = time_ns()
         cpu_usage = psutil.cpu_percent()
-        log_writer.writerow([now, cpu_usage,  psutil.virtual_memory().used, psutil.virtual_memory().free])
-        sleep(0.0005)
+        log_writer.writerow([now, cpu_usage, psutil.virtual_memory().used, psutil.virtual_memory().free])
+        sleep(0.001)
     log.close()
 
 

@@ -1,8 +1,8 @@
 import csv
 import os
-from time import time_ns, sleep
 
 import requests
+from time import sleep, perf_counter
 
 from .test_add_todo import create_to_do
 from ..headers import recv_json_headers
@@ -38,20 +38,20 @@ def test_delete_todo():
 
     for i, p in zip(ITERATIONS, PORTS[PORT_IDX]):
         print(i)
-        t1_start = time_ns()
+        t1_start = perf_counter()
         proc = start_server(p)
         for j in range(1, i + 1):
             last = create_to_do(str(j), p)
             sleep(PAUSE)
         # only delete the last one
-        t2_start = time_ns()
+        t2_start = perf_counter()
         delete_todo(last, p)
-        t2_end = time_ns()
+        t2_end = perf_counter()
 
         assert_deleted_todo(last, p)
         shutdown_server(proc, p)
 
-        t1_end =time_ns()
+        t1_end = perf_counter()
         t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])
         t2_writer.writerow([i, t2_start, t2_end, t2_end - t2_start])
         # sleep(30)

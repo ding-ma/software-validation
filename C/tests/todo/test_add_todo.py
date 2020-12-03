@@ -2,7 +2,7 @@ import csv
 import json
 import os
 
-from time import time_ns
+from time import perf_counter
 
 from ..headers import send_json_recv_json_headers, recv_json_headers
 from ..set_up import *
@@ -40,14 +40,14 @@ def test_add_todo():
 
     for i, p in zip(ITERATIONS, PORTS[PORT_IDX]):
         print(i)
-        t1_start = time_ns()
+        t1_start = perf_counter()
 
         proc = start_server(p)
         for j in range(i):  # add x amount of todos
             if i - 1 == j:
-                t2_start = time_ns()
+                t2_start = perf_counter()
                 create_to_do(str(i), p)
-                t2_end = time_ns()
+                t2_end = perf_counter()
                 assert_todos(str(i), p)
                 t2_writer.writerow([j + 1, t2_start, t2_end, t2_end - t2_start])
             else:
@@ -56,7 +56,7 @@ def test_add_todo():
             sleep(PAUSE)
         shutdown_server(proc, p)
 
-        t1_end = time_ns()
+        t1_end = perf_counter()
         t1_writer.writerow([i, t1_start, t1_end, t1_end - t1_start])
         # sleep(30)
 
