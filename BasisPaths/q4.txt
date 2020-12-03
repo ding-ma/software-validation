@@ -1,0 +1,17 @@
+ST
+ST S
+S A
+S END
+A B
+B END
+A C
+C D
+D END
+C E
+E F
+F END
+E G
+G H
+G END
+H END
+END

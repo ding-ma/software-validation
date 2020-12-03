@@ -1,0 +1,2 @@
+java -jar paths.jar EX_CF_002_In.txt -basis > EX_CF_002_BASIS_output.txt
+java -jar paths.jar EX_CF_002_In.txt > EX_CF_002_EDGES_output.txt

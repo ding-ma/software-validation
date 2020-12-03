@@ -1,0 +1,10 @@
+start node: START 
+end node: END
+Number of nodes: 6  Number of edges: 6
+Cyclomatic Complexity: 2
+----------------------------
+
+START,A,B,C,END
+START,A,B,D,A,B,C,END
+
+Number of basis paths: 2

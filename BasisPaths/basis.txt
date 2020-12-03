@@ -1,0 +1,14 @@
+start node: ST
+end node: END
+Number of nodes: 11  Number of edges: 15
+Cyclomatic Complexity: 6
+----------------------------
+
+ST,S,END
+ST,S,A,B,END
+ST,S,A,C,D,END
+ST,S,A,C,E,G,END
+ST,S,A,C,E,F,END
+ST,S,A,C,E,G,H,END
+
+Number of basis paths: 6
